@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 const particlesOptions = {
   fullScreen: {
     enable: false,
@@ -21,21 +21,19 @@ const particlesOptions = {
     },
     opacity: {
       value: 0.3,
-      random: true,
-      anim: {
+      animation: {
         enable: true,
         speed: 0.5,
-        opacity_min: 0.1,
+        minimumValue: 0.1,
         sync: false
       }
     },
     size: {
       value: 3,
-      random: true,
-      anim: {
+      animation: {
         enable: true,
         speed: 2,
-        size_min: 0.5,
+        minimumValue: 0.5,
         sync: false
       }
     },
@@ -109,24 +107,21 @@ const particlesOptions = {
   }
 }
 
-const particlesInit = async (engine) => {
-  // Se inicializa en el plugin
-}
-
-const particlesLoaded = async (container) => {
-  // console.log('Particles loaded', container)
+const particlesLoaded = async (_container: unknown) => {
+  // Particles loaded
 }
 </script>
 
 <template>
-  <div class="particles-wrapper">
-    <vue-particles
-      id="tsparticles"
-      :particles-init="particlesInit"
-      :particles-loaded="particlesLoaded"
-      :options="particlesOptions"
-    />
-  </div>
+  <ClientOnly>
+    <div class="particles-wrapper">
+      <vue-particles
+        id="tsparticles"
+        :options="particlesOptions"
+        @particles-loaded="particlesLoaded"
+      />
+    </div>
+  </ClientOnly>
 </template>
 
 <style scoped>

@@ -120,103 +120,50 @@ onMounted(() => {
 
 <template>
   <div class="min-h-screen bg-bg text-white">
-    <!-- Geometric Background -->
-    <div class="fixed inset-0 overflow-hidden pointer-events-none z-0">
-      <!-- Mesh gradient blurs -->
-      <div class="absolute top-0 right-0 w-[800px] h-[800px] bg-brand rounded-full opacity-[0.03] blur-[150px] translate-x-1/3 -translate-y-1/3" />
-      <div class="absolute bottom-0 left-0 w-[600px] h-[600px] bg-accent rounded-full opacity-[0.02] blur-[120px] -translate-x-1/3 translate-y-1/3" />
-
-      <!-- Geometric shapes -->
-      <svg class="absolute top-20 right-20 w-32 h-32 text-brand opacity-10" viewBox="0 0 100 100">
-        <polygon points="50,5 95,27.5 95,72.5 50,95 5,72.5 5,27.5" fill="none" stroke="currentColor" stroke-width="1"/>
-      </svg>
-      <svg class="absolute top-40 right-40 w-20 h-20 text-brand opacity-5" viewBox="0 0 100 100">
-        <polygon points="50,5 95,27.5 95,72.5 50,95 5,72.5 5,27.5" fill="currentColor"/>
-      </svg>
-      <svg class="absolute bottom-40 left-20 w-24 h-24 text-brand opacity-10" viewBox="0 0 100 100">
-        <polygon points="50,10 90,90 10,90" fill="none" stroke="currentColor" stroke-width="1"/>
-      </svg>
-    </div>
+    <!-- Particles Background -->
+    <ParticlesBackground />
 
     <!-- Navigation -->
-    <header class="fixed top-0 left-0 right-0 bg-bg/80 backdrop-blur-lg border-b border-border/50 z-50">
+    <Nav />
+
+    <!-- Hero Section using Hero component -->
+    <Hero
+      title="Menos busquedas,<br /><span class='text-brand'>mas codigo.</span>"
+      subtitle="Cheatsheets de programacion profesionales con busqueda instantanea, syntax highlighting y acceso de por vida. Paga una vez, consulta para siempre."
+      size="large"
+      align="left"
+    >
+      <template #actions>
+        <NuxtLink
+          to="/login"
+          class="btn-glow text-bg font-semibold px-8 py-4 rounded-lg text-lg inline-flex items-center gap-2"
+        >
+          Obtener acceso — $29
+        </NuxtLink>
+        <a
+          href="#contenido"
+          class="btn-outline font-semibold px-8 py-4 rounded-lg text-lg inline-flex items-center gap-2"
+        >
+          Ver contenido
+        </a>
+      </template>
+    </Hero>
+
+    <!-- Stats -->
+    <section class="relative pb-20 sm:pb-32">
       <UiContainer>
-        <nav class="flex items-center justify-between py-4">
-          <NuxtLink to="/" class="hover:opacity-80 transition-opacity">
-            <Logo size="lg" />
-          </NuxtLink>
-
-          <div class="hidden md:flex items-center gap-8">
-            <a href="#caracteristicas" class="text-sm text-gray-400 hover:text-brand transition-colors">Caracteristicas</a>
-            <a href="#contenido" class="text-sm text-gray-400 hover:text-brand transition-colors">Contenido</a>
-            <a href="#testimonios" class="text-sm text-gray-400 hover:text-brand transition-colors">Testimonios</a>
-            <a href="#faqs" class="text-sm text-gray-400 hover:text-brand transition-colors">FAQs</a>
+        <div class="grid grid-cols-3 gap-8 max-w-lg">
+          <div>
+            <div class="text-3xl sm:text-4xl font-bold text-brand">8+</div>
+            <div class="text-sm text-gray-500">Cheatcodes</div>
           </div>
-
-          <div class="flex items-center gap-4">
-            <NuxtLink
-              to="/login"
-              class="text-sm font-medium text-gray-400 hover:text-brand transition-colors"
-            >
-              Iniciar sesion
-            </NuxtLink>
-            <NuxtLink
-              to="/login"
-              class="btn-glow text-bg font-semibold px-5 py-2.5 rounded-lg"
-            >
-              Obtener acceso
-            </NuxtLink>
+          <div>
+            <div class="text-3xl sm:text-4xl font-bold text-accent">100+</div>
+            <div class="text-sm text-gray-500">Secciones</div>
           </div>
-        </nav>
-      </UiContainer>
-    </header>
-
-    <!-- Spacer for fixed header -->
-    <div class="h-20" aria-hidden="true"></div>
-
-    <!-- Hero Section -->
-    <section class="relative pt-12 pb-20 sm:pt-20 sm:pb-32">
-      <UiContainer>
-        <div class="max-w-4xl">
-          <h1 class="text-4xl sm:text-5xl lg:text-7xl font-bold leading-tight mb-6">
-            Menos busquedas,<br />
-            <span class="text-brand">mas {{ typedText }}<span class="animate-pulse" :class="{ 'opacity-0': typingComplete }">|</span></span>
-          </h1>
-
-          <p class="text-lg sm:text-xl text-gray-400 max-w-2xl mb-10">
-            Cheatsheets de programacion profesionales con busqueda instantanea, syntax highlighting y acceso de por vida. Paga una vez, consulta para siempre.
-          </p>
-
-          <!-- CTA Buttons -->
-          <div class="flex flex-col sm:flex-row items-start gap-4 mb-16">
-            <NuxtLink
-              to="/login"
-              class="btn-glow text-bg font-semibold px-8 py-4 rounded-lg text-lg inline-flex items-center gap-2"
-            >
-              Obtener acceso — $29
-            </NuxtLink>
-            <a
-              href="#contenido"
-              class="btn-outline font-semibold px-8 py-4 rounded-lg text-lg inline-flex items-center gap-2"
-            >
-              Ver contenido
-            </a>
-          </div>
-
-          <!-- Stats -->
-          <div class="grid grid-cols-3 gap-8 max-w-lg">
-            <div>
-              <div class="text-3xl sm:text-4xl font-bold text-brand">8+</div>
-              <div class="text-sm text-gray-500">Cheatcodes</div>
-            </div>
-            <div>
-              <div class="text-3xl sm:text-4xl font-bold text-accent">100+</div>
-              <div class="text-sm text-gray-500">Secciones</div>
-            </div>
-            <div>
-              <div class="text-3xl sm:text-4xl font-bold text-white">∞</div>
-              <div class="text-sm text-gray-500">Updates</div>
-            </div>
+          <div>
+            <div class="text-3xl sm:text-4xl font-bold text-white">∞</div>
+            <div class="text-sm text-gray-500">Updates</div>
           </div>
         </div>
       </UiContainer>
@@ -440,7 +387,7 @@ onMounted(() => {
             </NuxtLink>
 
             <p class="mt-4 text-sm text-gray-500">
-             Lorem ipsum dolor sit, amet consectetur adipisicing.
+              Garantia de satisfaccion de 30 dias. Sin preguntas.
             </p>
           </div>
         </div>

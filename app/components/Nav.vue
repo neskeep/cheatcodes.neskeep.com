@@ -1,11 +1,24 @@
-<script setup>
+<script setup lang="ts">
 const user = useSupabaseUser()
 const isMenuOpen = ref(false)
 
-const navigation = [
-  { name: 'Cheatcodes', href: '/app/cheatcodes' },
-  { name: 'Pricing', href: '/pricing' },
+// Navigation items for landing page
+const landingNavigation = [
+  { name: 'Caracteristicas', href: '#caracteristicas' },
+  { name: 'Contenido', href: '#contenido' },
+  { name: 'Testimonios', href: '#testimonios' },
+  { name: 'FAQs', href: '#faqs' }
 ]
+
+// Navigation items for app
+const appNavigation = [
+  { name: 'Cheatcodes', href: '/app' },
+]
+
+const route = useRoute()
+const isLandingPage = computed(() => route.path === '/')
+
+const navigation = computed(() => isLandingPage.value ? landingNavigation : appNavigation)
 
 const toggleMenu = () => {
   isMenuOpen.value = !isMenuOpen.value
@@ -14,41 +27,97 @@ const toggleMenu = () => {
 const closeMenu = () => {
   isMenuOpen.value = false
 }
+
+// Active section tracking for landing page
+const activeSection = ref('')
+
+const setupActiveSection = () => {
+  if (!isLandingPage.value) return
+
+  const sections = ['caracteristicas', 'contenido', 'testimonios', 'faqs']
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          activeSection.value = entry.target.id
+        }
+      })
+    },
+    { rootMargin: '-50% 0px -50% 0px' }
+  )
+
+  sections.forEach((sectionId) => {
+    const element = document.getElementById(sectionId)
+    if (element) {
+      observer.observe(element)
+    }
+  })
+}
+
+onMounted(() => {
+  setupActiveSection()
+})
+
+// Helper to check if anchor link is active
+const isActive = (href: string) => {
+  if (!href.startsWith('#')) return false
+  const sectionId = href.replace('#', '')
+  return activeSection.value === sectionId
+}
 </script>
 
 <template>
   <header class="fixed top-0 left-0 right-0 z-50 bg-bg/80 backdrop-blur-lg border-b border-border/50">
     <UiContainer>
-      <nav class="flex items-center justify-between py-4" aria-label="Main navigation">
+      <nav class="flex items-center justify-between py-4" aria-label="Navegacion principal">
         <!-- Logo -->
         <NuxtLink
           to="/"
           class="flex items-center gap-3 hover:opacity-80 transition-opacity"
-          aria-label="Home - Neskeep Cheatcodes"
+          aria-label="Inicio - Cheatcodes by Neskeep"
         >
           <Logo size="lg" />
         </NuxtLink>
 
         <!-- Desktop Navigation -->
         <div class="hidden md:flex items-center gap-8">
-          <NuxtLink
-            v-for="item in navigation"
-            :key="item.name"
-            :to="item.href"
-            class="relative text-gray-300 hover:text-brand transition-colors font-medium py-1"
-            active-class="text-brand"
-          >
-            {{ item.name }}
-            <span
-              class="absolute -bottom-1 left-0 h-0.5 bg-brand transition-all duration-300 w-0"
-            />
-          </NuxtLink>
+          <!-- Landing page anchors -->
+          <template v-if="isLandingPage">
+            <a
+              v-for="item in navigation"
+              :key="item.name"
+              :href="item.href"
+              class="relative text-gray-300 hover:text-brand transition-colors font-medium py-1"
+              :class="{ 'text-brand': isActive(item.href) }"
+            >
+              {{ item.name }}
+              <!-- Active indicator -->
+              <span
+                class="absolute -bottom-1 left-0 h-0.5 bg-brand transition-all duration-300"
+                :class="isActive(item.href) ? 'w-full' : 'w-0'"
+              />
+            </a>
+          </template>
+
+          <!-- App navigation links -->
+          <template v-else>
+            <NuxtLink
+              v-for="item in navigation"
+              :key="item.name"
+              :to="item.href"
+              class="relative text-gray-300 hover:text-brand transition-colors font-medium py-1"
+              active-class="text-brand"
+            >
+              {{ item.name }}
+            </NuxtLink>
+          </template>
 
           <!-- Auth buttons -->
           <template v-if="user">
             <NuxtLink
               to="/app"
-              class="inline-flex items-center justify-center font-semibold transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 focus-visible:ring-offset-bg disabled:opacity-50 disabled:pointer-events-none rounded-lg px-4 py-2 text-sm btn-glow text-bg shadow-lg hover:shadow-xl"
+              class="btn-glow text-bg font-semibold px-5 py-2.5 rounded-lg"
             >
               Dashboard
             </NuxtLink>
@@ -61,10 +130,10 @@ const closeMenu = () => {
               Iniciar sesion
             </NuxtLink>
             <NuxtLink
-              to="/register"
-              class="inline-flex items-center justify-center font-semibold transition-all duration-300 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 focus-visible:ring-offset-bg disabled:opacity-50 disabled:pointer-events-none rounded-lg px-4 py-2 text-sm btn-glow text-bg shadow-lg hover:shadow-xl"
+              to="/login"
+              class="btn-glow text-bg font-semibold px-5 py-2.5 rounded-lg"
             >
-              Empezar gratis
+              Obtener acceso
             </NuxtLink>
           </template>
         </div>
@@ -120,22 +189,41 @@ const closeMenu = () => {
           v-if="isMenuOpen"
           class="md:hidden pb-4 space-y-3"
         >
-          <NuxtLink
-            v-for="item in navigation"
-            :key="item.name"
-            :to="item.href"
-            class="block px-4 py-2 text-gray-300 hover:text-brand hover:bg-surface/50 rounded-lg transition-all"
-            active-class="text-brand bg-brand/10 border-l-2 border-brand"
-            @click="closeMenu"
-          >
-            {{ item.name }}
-          </NuxtLink>
+          <!-- Landing page anchors -->
+          <template v-if="isLandingPage">
+            <a
+              v-for="item in navigation"
+              :key="item.name"
+              :href="item.href"
+              class="block px-4 py-2 text-gray-300 hover:text-brand hover:bg-surface/50 rounded-lg transition-all relative"
+              :class="{
+                'text-brand bg-brand/10 border-l-2 border-brand': isActive(item.href)
+              }"
+              @click="closeMenu"
+            >
+              {{ item.name }}
+            </a>
+          </template>
+
+          <!-- App navigation links -->
+          <template v-else>
+            <NuxtLink
+              v-for="item in navigation"
+              :key="item.name"
+              :to="item.href"
+              class="block px-4 py-2 text-gray-300 hover:text-brand hover:bg-surface/50 rounded-lg transition-all"
+              active-class="text-brand bg-brand/10 border-l-2 border-brand"
+              @click="closeMenu"
+            >
+              {{ item.name }}
+            </NuxtLink>
+          </template>
 
           <div class="px-4 pt-2 space-y-3">
             <template v-if="user">
               <NuxtLink
                 to="/app"
-                class="inline-flex items-center justify-center font-semibold transition-all duration-300 w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 focus-visible:ring-offset-bg disabled:opacity-50 disabled:pointer-events-none rounded-lg px-4 py-2 text-sm btn-glow text-bg shadow-lg hover:shadow-xl"
+                class="block w-full text-center btn-glow text-bg font-semibold px-5 py-2.5 rounded-lg"
                 @click="closeMenu"
               >
                 Dashboard
@@ -150,11 +238,11 @@ const closeMenu = () => {
                 Iniciar sesion
               </NuxtLink>
               <NuxtLink
-                to="/register"
-                class="inline-flex items-center justify-center font-semibold transition-all duration-300 w-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2 focus-visible:ring-offset-bg disabled:opacity-50 disabled:pointer-events-none rounded-lg px-4 py-2 text-sm btn-glow text-bg shadow-lg hover:shadow-xl"
+                to="/login"
+                class="block w-full text-center btn-glow text-bg font-semibold px-5 py-2.5 rounded-lg"
                 @click="closeMenu"
               >
-                Empezar gratis
+                Obtener acceso
               </NuxtLink>
             </template>
           </div>
