@@ -1,0 +1,425 @@
+@import "tailwindcss";
+
+/* ============================================
+   NESKEEP - Unified Design System
+   Based on neskeep.com reference
+   ============================================ */
+
+/* Base color definitions */
+:root {
+  /* Neskeep Brand Colors */
+  --color-neocyan: #00C9D4;
+  --color-quantum-blue: #0C0F1C;
+  --color-pulse-green: #A6FF3A;
+
+  /* Semantic colors for dark theme (default) */
+  --color-surface: #151922;
+  --color-border: rgba(255, 255, 255, 0.1);
+}
+
+/* ============================================
+   Tailwind v4 @theme Configuration
+   Maps CSS variables to Tailwind utilities
+   ============================================ */
+@theme {
+  --color-brand: var(--color-neocyan);
+  --color-bg: var(--color-quantum-blue);
+  --color-accent: var(--color-pulse-green);
+  --color-surface: var(--color-surface);
+  --color-border: var(--color-border);
+}
+
+/* ============================================
+   Base Styles
+   ============================================ */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--color-quantum-blue);
+  color: #ffffff;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  min-height: 100vh;
+  /* Animated mesh gradient background */
+  background-image:
+    radial-gradient(ellipse 80% 50% at 20% -20%, rgba(0, 201, 212, 0.15), transparent),
+    radial-gradient(ellipse 60% 40% at 80% 120%, rgba(166, 255, 58, 0.08), transparent),
+    radial-gradient(ellipse 50% 30% at 50% 50%, rgba(0, 201, 212, 0.05), transparent);
+  background-attachment: fixed;
+  animation: meshRotate 30s ease-in-out infinite;
+}
+
+@keyframes meshRotate {
+  0%, 100% {
+    background-position: 0% 0%, 100% 100%, 50% 50%;
+  }
+  50% {
+    background-position: 100% 50%, 0% 50%, 50% 100%;
+  }
+}
+
+/* ============================================
+   Custom Scrollbar - Neskeep Style
+   ============================================ */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 201, 212, 0.3);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-neocyan);
+}
+
+/* Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 201, 212, 0.3) rgba(255, 255, 255, 0.02);
+}
+
+/* ============================================
+   Focus States - Accessibility
+   ============================================ */
+*:focus-visible {
+  outline: 2px solid var(--color-neocyan);
+  outline-offset: 2px;
+}
+
+/* ============================================
+   Button Styles - Neskeep Unified
+   ============================================ */
+
+/* Primary button with glow effect */
+.btn-glow {
+  background: linear-gradient(135deg, var(--color-neocyan), #00a8b3);
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.btn-glow::before {
+  content: '';
+  position: absolute;
+  inset: -2px;
+  background: linear-gradient(135deg, var(--color-neocyan), var(--color-pulse-green));
+  border-radius: inherit;
+  opacity: 0;
+  z-index: -1;
+  transition: opacity 0.3s ease;
+  filter: blur(15px);
+}
+
+.btn-glow:hover::before {
+  opacity: 0.6;
+}
+
+.btn-glow:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 40px rgba(0, 201, 212, 0.4);
+}
+
+/* Outline button style */
+.btn-outline {
+  background: transparent;
+  border: 2px solid var(--color-neocyan);
+  color: var(--color-neocyan);
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.btn-outline::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, var(--color-neocyan), #00a8b3);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: -1;
+}
+
+.btn-outline:hover::before {
+  opacity: 1;
+}
+
+.btn-outline:hover {
+  color: var(--color-quantum-blue);
+  border-color: transparent;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 40px rgba(0, 201, 212, 0.4);
+}
+
+/* ============================================
+   Card Styles - Neskeep Unified
+   ============================================ */
+.card-glow {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 16px;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card-glow::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    800px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+    rgba(0, 201, 212, 0.1),
+    transparent 40%
+  );
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  pointer-events: none;
+}
+
+.card-glow:hover::before {
+  opacity: 1;
+}
+
+.card-glow:hover {
+  border-color: rgba(0, 201, 212, 0.3);
+  transform: translateY(-4px);
+  box-shadow:
+    0 20px 40px rgba(0, 0, 0, 0.3),
+    0 0 60px rgba(0, 201, 212, 0.1);
+}
+
+/* ============================================
+   Glow Effects
+   ============================================ */
+.shadow-glow-sm {
+  box-shadow: 0 0 20px rgba(0, 201, 212, 0.2);
+}
+
+.shadow-glow {
+  box-shadow: 0 0 30px rgba(0, 201, 212, 0.3);
+}
+
+.shadow-glow-lg {
+  box-shadow: 0 0 50px rgba(0, 201, 212, 0.4);
+}
+
+/* Text glow */
+.text-glow {
+  text-shadow: 0 0 20px rgba(0, 201, 212, 0.5);
+}
+
+/* Gradient text */
+.gradient-text {
+  background: linear-gradient(135deg, var(--color-neocyan), var(--color-pulse-green));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ============================================
+   Animations - Neskeep
+   ============================================ */
+
+/* Morph animation for decorative elements */
+@keyframes morph {
+  0%, 100% {
+    border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+  }
+  25% {
+    border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%;
+  }
+  50% {
+    border-radius: 50% 60% 30% 60% / 30% 60% 70% 40%;
+  }
+  75% {
+    border-radius: 60% 40% 60% 30% / 70% 30% 50% 60%;
+  }
+}
+
+/* Liquid flowing animation */
+@keyframes liquid {
+  0%, 100% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  25% {
+    transform: translate(10px, -10px) rotate(5deg);
+  }
+  50% {
+    transform: translate(-5px, 5px) rotate(-3deg);
+  }
+  75% {
+    transform: translate(-10px, -5px) rotate(2deg);
+  }
+}
+
+/* Shimmer effect */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+/* Glow pulse */
+@keyframes glow-pulse {
+  0%, 100% {
+    opacity: 0.4;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.05);
+  }
+}
+
+/* Float animation */
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+/* Fade in animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Animation utilities */
+.animate-morph {
+  animation: morph 8s ease-in-out infinite;
+}
+
+.animate-liquid {
+  animation: liquid 10s ease-in-out infinite;
+}
+
+.animate-shimmer {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(0, 201, 212, 0.1),
+    transparent
+  );
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite;
+}
+
+.animate-glow-pulse {
+  animation: glow-pulse 3s ease-in-out infinite;
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+/* ============================================
+   Code Block Styles
+   ============================================ */
+.code-block-wrapper {
+  position: relative;
+}
+
+.copy-button {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  padding: 0.375rem 0.625rem;
+  font-size: 0.75rem;
+  background: rgba(0, 201, 212, 0.1);
+  border: 1px solid rgba(0, 201, 212, 0.3);
+  border-radius: 0.375rem;
+  color: var(--color-neocyan);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  opacity: 0;
+  z-index: 10;
+}
+
+.code-block-wrapper:hover .copy-button {
+  opacity: 1;
+}
+
+.copy-button:hover {
+  background: rgba(0, 201, 212, 0.2);
+  border-color: var(--color-neocyan);
+  box-shadow: 0 0 10px rgba(0, 201, 212, 0.3);
+}
+
+.copy-button.copied {
+  background: var(--color-pulse-green);
+  border-color: var(--color-pulse-green);
+  color: var(--color-quantum-blue);
+}
+
+/* ============================================
+   Keyboard Shortcut Badge
+   ============================================ */
+.kbd {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.125rem 0.375rem;
+  font-size: 0.75rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 0.25rem;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* ============================================
+   Input Styles
+   ============================================ */
+.input-neskeep {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 0.5rem;
+  padding: 0.75rem 1rem;
+  color: white;
+  transition: all 0.2s ease;
+}
+
+.input-neskeep:focus {
+  outline: none;
+  border-color: var(--color-neocyan);
+  box-shadow: 0 0 0 3px rgba(0, 201, 212, 0.1);
+}
+
+.input-neskeep::placeholder {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+/* ============================================
+   Print Styles
+   ============================================ */
+@media print {
+  * {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+}

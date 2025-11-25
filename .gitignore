@@ -1,0 +1,33 @@
+# Nuxt dev/build outputs
+.output
+.data
+.nuxt
+.nitro
+.cache
+dist
+
+# Node dependencies
+node_modules
+
+# Logs
+logs
+*.log
+
+# Misc
+.DS_Store
+.fleet
+.idea
+
+# Local env files
+.env
+.env.*
+!.env.example
+
+# Generated PDFs (optional - comment out if you want to commit them)
+public/pdfs
+
+# Notes with credentials
+notes.md
+
+# Playwright MCP
+.playwright-mcp/
