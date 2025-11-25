@@ -126,44 +126,49 @@ onMounted(() => {
     <!-- Navigation -->
     <Nav />
 
-    <!-- Hero Section using Hero component -->
-    <Hero
-      title="Menos busquedas,<br /><span class='text-brand'>mas codigo.</span>"
-      subtitle="Cheatsheets de programacion profesionales con busqueda instantanea, syntax highlighting y acceso de por vida. Paga una vez, consulta para siempre."
-      size="large"
-      align="left"
-    >
-      <template #actions>
-        <NuxtLink
-          to="/login"
-          class="btn-glow text-bg font-semibold px-8 py-4 rounded-lg text-lg inline-flex items-center gap-2"
-        >
-          Obtener acceso — $29
-        </NuxtLink>
-        <a
-          href="#contenido"
-          class="btn-outline font-semibold px-8 py-4 rounded-lg text-lg inline-flex items-center gap-2"
-        >
-          Ver contenido
-        </a>
-      </template>
-    </Hero>
-
-    <!-- Stats -->
-    <section class="relative pb-20 sm:pb-32">
+    <!-- Hero Section -->
+    <section class="relative pt-12 pb-20 sm:pt-20 sm:pb-32">
       <UiContainer>
-        <div class="grid grid-cols-3 gap-8 max-w-lg">
-          <div>
-            <div class="text-3xl sm:text-4xl font-bold text-brand">8+</div>
-            <div class="text-sm text-gray-500">Cheatcodes</div>
+        <div class="max-w-4xl mx-auto text-center">
+          <h1 class="text-4xl sm:text-5xl lg:text-7xl font-bold leading-tight mb-6">
+            Menos busquedas,<br />
+            <span class="text-brand">mas {{ typedText }}<span class="animate-pulse" :class="{ 'opacity-0': typingComplete }">|</span></span>
+          </h1>
+
+          <p class="text-lg sm:text-xl text-gray-400 max-w-2xl mx-auto mb-10">
+            Cheatsheets de programacion profesionales con busqueda instantanea, syntax highlighting y acceso de por vida. Paga una vez, consulta para siempre.
+          </p>
+
+          <!-- CTA Buttons -->
+          <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
+            <NuxtLink
+              to="/login"
+              class="btn-glow text-bg font-semibold px-8 py-4 rounded-lg text-lg inline-flex items-center gap-2"
+            >
+              Obtener acceso — $29
+            </NuxtLink>
+            <a
+              href="#contenido"
+              class="btn-outline font-semibold px-8 py-4 rounded-lg text-lg inline-flex items-center gap-2"
+            >
+              Ver contenido
+            </a>
           </div>
-          <div>
-            <div class="text-3xl sm:text-4xl font-bold text-accent">100+</div>
-            <div class="text-sm text-gray-500">Secciones</div>
-          </div>
-          <div>
-            <div class="text-3xl sm:text-4xl font-bold text-white">∞</div>
-            <div class="text-sm text-gray-500">Updates</div>
+
+          <!-- Stats -->
+          <div class="grid grid-cols-3 gap-8 max-w-lg mx-auto">
+            <div class="text-center">
+              <div class="text-3xl sm:text-4xl font-bold text-brand">8+</div>
+              <div class="text-sm text-gray-500">Cheatcodes</div>
+            </div>
+            <div class="text-center">
+              <div class="text-3xl sm:text-4xl font-bold text-accent">100+</div>
+              <div class="text-sm text-gray-500">Secciones</div>
+            </div>
+            <div class="text-center">
+              <div class="text-3xl sm:text-4xl font-bold text-white">∞</div>
+              <div class="text-sm text-gray-500">Updates</div>
+            </div>
           </div>
         </div>
       </UiContainer>

@@ -77,7 +77,7 @@ const isActive = (href: string) => {
           class="flex items-center gap-3 hover:opacity-80 transition-opacity"
           aria-label="Inicio - Cheatcodes by Neskeep"
         >
-          <Logo size="lg" />
+          <Logo size="lg" :showIcon="true" />
         </NuxtLink>
 
         <!-- Desktop Navigation -->

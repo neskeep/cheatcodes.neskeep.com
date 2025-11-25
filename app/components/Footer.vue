@@ -10,7 +10,7 @@ const currentYear = new Date().getFullYear()
           <!-- Brand Column -->
           <div class="md:col-span-2">
             <NuxtLink to="/" class="inline-block mb-4">
-              <Logo size="lg" />
+              <Logo size="lg" :showIcon="true" />
             </NuxtLink>
             <p class="text-gray-400 mb-6 max-w-md">
               Cheatsheets profesionales para desarrolladores. Aprende, practica y domina cualquier lenguaje.
