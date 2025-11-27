@@ -27,7 +27,7 @@ const email = ref('')
 const password = ref('')
 const isLoading = ref(false)
 const error = ref('')
-const mode = ref<'login' | 'register' | 'forgot'>('login')
+const showForgotPassword = ref(false)
 const successMessage = ref('')
 
 // Handle login
@@ -47,44 +47,13 @@ const handleLogin = async () => {
     })
 
     if (authError) {
-      error.value = authError.message
-    }
-  } catch (e) {
-    error.value = 'Ocurrió un error inesperado'
-  } finally {
-    isLoading.value = false
-  }
-}
-
-// Handle register
-const handleRegister = async () => {
-  if (!email.value || !password.value) {
-    error.value = 'Por favor completa todos los campos'
-    return
-  }
-
-  if (password.value.length < 6) {
-    error.value = 'La contraseña debe tener al menos 6 caracteres'
-    return
-  }
-
-  isLoading.value = true
-  error.value = ''
-
-  try {
-    const { error: authError } = await supabase.auth.signUp({
-      email: email.value,
-      password: password.value,
-      options: {
-        emailRedirectTo: `${window.location.origin}/confirm`,
-      },
-    })
-
-    if (authError) {
-      error.value = authError.message
-    } else {
-      successMessage.value = '¡Revisa tu email para confirmar tu cuenta!'
-      mode.value = 'login'
+      if (authError.message === 'Invalid login credentials') {
+        error.value = 'Email o contraseña incorrectos'
+      } else if (authError.message === 'Email not confirmed') {
+        error.value = 'Por favor confirma tu email antes de iniciar sesión'
+      } else {
+        error.value = authError.message
+      }
     }
   } catch (e) {
     error.value = 'Ocurrió un error inesperado'
@@ -112,7 +81,7 @@ const handleForgotPassword = async () => {
       error.value = authError.message
     } else {
       successMessage.value = '¡Revisa tu email para el link de recuperación!'
-      mode.value = 'login'
+      showForgotPassword.value = false
     }
   } catch (e) {
     error.value = 'Ocurrió un error inesperado'
@@ -122,7 +91,7 @@ const handleForgotPassword = async () => {
 }
 
 // Handle OAuth
-const handleOAuth = async (provider: 'github' | 'google') => {
+const handleOAuth = async (provider: 'google') => {
   isLoading.value = true
   error.value = ''
 
@@ -146,34 +115,18 @@ const handleOAuth = async (provider: 'github' | 'google') => {
 
 // Form submission
 const handleSubmit = () => {
-  if (mode.value === 'login') {
-    handleLogin()
-  } else if (mode.value === 'register') {
-    handleRegister()
-  } else {
+  if (showForgotPassword.value) {
     handleForgotPassword()
+  } else {
+    handleLogin()
   }
 }
 </script>
 
 <template>
   <div class="min-h-screen bg-[#0C0F1C] text-white flex flex-col">
-    <!-- Geometric Background -->
-    <div class="fixed inset-0 overflow-hidden pointer-events-none z-0">
-      <div class="absolute top-0 right-0 w-[600px] h-[600px] bg-[#00C9D4] rounded-full opacity-[0.03] blur-[150px] translate-x-1/3 -translate-y-1/3" />
-      <div class="absolute bottom-0 left-0 w-[400px] h-[400px] bg-[#A6FF3A] rounded-full opacity-[0.02] blur-[120px] -translate-x-1/3 translate-y-1/3" />
-    </div>
-
-    <!-- Header -->
-    <header class="relative z-10 bg-[#0C0F1C]/80 backdrop-blur-md border-b border-white/5">
-      <div class="max-w-7xl mx-auto px-4 py-4 sm:px-6 lg:px-8">
-        <div class="flex items-center justify-between">
-          <NuxtLink to="/">
-            <Logo size="md" class="text-white" />
-          </NuxtLink>
-        </div>
-      </div>
-    </header>
+    <!-- Particles Background -->
+    <ParticlesBackground />
 
     <!-- Main content -->
     <main class="relative z-10 flex-1 flex items-center justify-center px-4 py-12">
@@ -183,10 +136,10 @@ const handleSubmit = () => {
           <!-- Header -->
           <div class="text-center mb-8">
             <h1 class="text-2xl font-bold mb-2">
-              {{ mode === 'login' ? 'Bienvenido de vuelta' : mode === 'register' ? 'Crear cuenta' : 'Recuperar contraseña' }}
+              {{ showForgotPassword ? 'Recuperar contraseña' : 'Bienvenido de vuelta' }}
             </h1>
             <p class="text-gray-400 text-sm">
-              {{ mode === 'login' ? 'Inicia sesión para acceder a tus cheatcodes' : mode === 'register' ? 'Obtén acceso de por vida a todos los cheatcodes' : 'Ingresa tu email para recuperar tu contraseña' }}
+              {{ showForgotPassword ? 'Ingresa tu email para recuperar tu contraseña' : 'Inicia sesión para acceder a tus cheatcodes' }}
             </p>
           </div>
 
@@ -206,7 +159,6 @@ const handleSubmit = () => {
             {{ error }}
           </div>
 
-
           <!-- Form -->
           <form @submit.prevent="handleSubmit" class="space-y-4">
             <div>
@@ -223,7 +175,7 @@ const handleSubmit = () => {
               />
             </div>
 
-            <div v-if="mode !== 'forgot'">
+            <div v-if="!showForgotPassword">
               <label for="password" class="block text-sm font-medium text-gray-300 mb-1">
                 Contraseña
               </label>
@@ -238,10 +190,10 @@ const handleSubmit = () => {
             </div>
 
             <!-- Forgot password link -->
-            <div v-if="mode === 'login'" class="text-right">
+            <div v-if="!showForgotPassword" class="text-right">
               <button
                 type="button"
-                @click="mode = 'forgot'; error = ''; successMessage = ''"
+                @click="showForgotPassword = true; error = ''; successMessage = ''"
                 class="text-sm text-[#00C9D4] hover:underline"
               >
                 ¿Olvidaste tu contraseña?
@@ -262,13 +214,23 @@ const handleSubmit = () => {
                 Cargando...
               </span>
               <span v-else>
-                {{ mode === 'login' ? 'Iniciar sesión' : mode === 'register' ? 'Crear cuenta' : 'Enviar link de recuperación' }}
+                {{ showForgotPassword ? 'Enviar link de recuperación' : 'Iniciar sesión' }}
               </span>
             </button>
           </form>
 
+          <!-- Back to login from forgot password -->
+          <div v-if="showForgotPassword" class="mt-4 text-center">
+            <button
+              @click="showForgotPassword = false; error = ''; successMessage = ''"
+              class="text-sm text-[#00C9D4] hover:underline"
+            >
+              Volver a iniciar sesión
+            </button>
+          </div>
+
           <!-- Divider -->
-          <div v-if="mode !== 'forgot'" class="relative my-6">
+          <div v-if="!showForgotPassword" class="relative my-6">
             <div class="absolute inset-0 flex items-center">
               <div class="w-full border-t border-white/10"></div>
             </div>
@@ -279,7 +241,7 @@ const handleSubmit = () => {
 
           <!-- Google OAuth -->
           <button
-            v-if="mode !== 'forgot'"
+            v-if="!showForgotPassword"
             type="button"
             :disabled="isLoading"
             @click="handleOAuth('google')"
@@ -294,26 +256,15 @@ const handleSubmit = () => {
             Continuar con Google
           </button>
 
-          <!-- Toggle mode -->
-          <div class="mt-6 text-center text-sm text-gray-400">
-            <template v-if="mode === 'login'">
-              ¿No tienes cuenta?
-              <button
-                @click="mode = 'register'; error = ''; successMessage = ''"
-                class="text-[#00C9D4] hover:underline font-medium ml-1"
-              >
-                Regístrate
-              </button>
-            </template>
-            <template v-else>
-              ¿Ya tienes cuenta?
-              <button
-                @click="mode = 'login'; error = ''; successMessage = ''"
-                class="text-[#00C9D4] hover:underline font-medium ml-1"
-              >
-                Inicia sesión
-              </button>
-            </template>
+          <!-- Register link -->
+          <div v-if="!showForgotPassword" class="mt-6 text-center text-sm text-gray-400">
+            ¿No tienes cuenta?
+            <NuxtLink
+              to="/registro"
+              class="text-[#00C9D4] hover:underline font-medium ml-1"
+            >
+              Regístrate
+            </NuxtLink>
           </div>
         </div>
 

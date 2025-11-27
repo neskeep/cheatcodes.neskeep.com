@@ -12,109 +12,223 @@ useHead({
   ],
 })
 
-// Features list
-const features = [
+// Enable card glow effect that follows cursor
+useCardGlow()
+
+// Hero rotating words
+const rotatingWords = ['codigo.', 'productividad.', 'eficiencia.', 'resultados.']
+const currentWordIndex = ref(0)
+const currentWord = ref('')
+const isDeleting = ref(false)
+
+// Included cheatcodes
+const includedCheatcodes = [
   {
-    icon: '⚡',
-    title: 'Acceso instantaneo',
-    description: 'Accede a todos los cheatcodes en el momento que compras. Sin esperas, sin suscripciones.'
+    id: 'javascript',
+    name: 'JavaScript ES2024',
+    logo: 'javascript',
+    available: true,
+    color: '#F7DF1E',
+    section: 'Array Methods',
+    url: 'javascript'
   },
   {
-    icon: '🔄',
-    title: 'Updates gratis',
-    description: 'Todos los cheatcodes futuros y actualizaciones incluidos. Tu compra aumenta de valor.'
+    id: 'vue',
+    name: 'Vue 3',
+    logo: 'vue',
+    available: true,
+    color: '#42B883',
+    section: 'Composition API',
+    url: 'vue'
   },
-  {
-    icon: '🎨',
-    title: 'Diseño profesional',
-    description: 'Syntax highlighting, modo oscuro y layouts responsivos diseñados profesionalmente.'
-  },
-  {
-    icon: '🔍',
-    title: 'Busqueda instantanea',
-    description: 'Encuentra cualquier snippet en segundos con nuestra busqueda global potente.'
-  },
-  {
-    icon: '📱',
-    title: 'Funciona en todo',
-    description: 'Accede desde cualquier dispositivo - desktop, tablet o movil. Tus cheatcodes van contigo.'
-  },
-  {
-    icon: '🔒',
-    title: 'Acceso de por vida',
-    description: 'Paga una vez, accede para siempre. Sin fees recurrentes, sin fechas de expiracion.'
-  }
+  { id: 'react', name: 'React 18', logo: 'react', available: 'coming', color: '#61DAFB' },
+  { id: 'typescript', name: 'TypeScript', logo: 'typescript', available: 'coming', color: '#3178C6' },
+  { id: 'tailwind', name: 'CSS & Tailwind', logo: 'tailwind', available: 'coming', color: '#38BDF8' },
+  { id: 'html', name: 'HTML5', logo: 'html', available: 'coming', color: '#E34F26' },
+  { id: 'node', name: 'Node.js', logo: 'node', available: 'coming', color: '#339933' },
+  { id: 'git', name: 'Git & GitHub', logo: 'git', available: 'coming', color: '#F05032' },
 ]
 
-// Included cheatcodes - using logo component names
-const includedCheatcodes = [
-  { name: 'JavaScript ES2024', logo: 'LogosJavaScriptLogo', available: true },
-  { name: 'Vue 3', logo: 'LogosVueLogo', available: true },
-  { name: 'React 18', logo: 'LogosReactLogo', available: 'coming' },
-  { name: 'TypeScript', logo: 'LogosTypeScriptLogo', available: 'coming' },
-  { name: 'CSS & Tailwind', logo: 'LogosTailwindLogo', available: 'coming' },
-  { name: 'HTML5', logo: 'LogosHtmlLogo', available: 'coming' },
-  { name: 'Node.js', logo: 'LogosNodeLogo', available: 'coming' },
-  { name: 'Git & GitHub', logo: 'LogosGitLogo', available: 'coming' },
-]
+// Selected cheatcode for preview
+const selectedCheatcode = ref(includedCheatcodes[0])
+
+// Code examples for each cheatcode
+interface CodeExample {
+  name: string
+  comment: string
+  code: string
+  result: string
+}
+
+const codeExamples: Record<string, { methods: CodeExample[] }> = {
+  javascript: {
+    methods: [
+      {
+        name: '.map()',
+        comment: '// .map() - Transforma cada elemento',
+        code: `const nums = [1, 2, 3];
+const doubled = nums.map(n => n * 2);`,
+        result: '// [2, 4, 6]'
+      },
+      {
+        name: '.filter()',
+        comment: '// .filter() - Filtra elementos',
+        code: `const nums = [1, 2, 3, 4, 5];
+const evens = nums.filter(n => n % 2 === 0);`,
+        result: '// [2, 4]'
+      },
+      {
+        name: '.reduce()',
+        comment: '// .reduce() - Reduce a un valor',
+        code: `const nums = [1, 2, 3, 4];
+const sum = nums.reduce((acc, n) => acc + n, 0);`,
+        result: '// 10'
+      },
+      {
+        name: '.find()',
+        comment: '// .find() - Encuentra el primero',
+        code: `const users = [{id: 1}, {id: 2}];
+const user = users.find(u => u.id === 2);`,
+        result: '// {id: 2}'
+      },
+      {
+        name: '.some()',
+        comment: '// .some() - Verifica si alguno cumple',
+        code: `const nums = [1, 2, 3, 4, 5];
+const hasEven = nums.some(n => n % 2 === 0);`,
+        result: '// true'
+      },
+    ]
+  },
+  vue: {
+    methods: [
+      {
+        name: 'ref()',
+        comment: '// ref() - Estado reactivo',
+        code: `const count = ref(0);
+count.value++;`,
+        result: '// count.value = 1'
+      },
+      {
+        name: 'computed()',
+        comment: '// computed() - Valor derivado',
+        code: `const count = ref(2);
+const doubled = computed(() => count.value * 2);`,
+        result: '// doubled.value = 4'
+      },
+      {
+        name: 'watch()',
+        comment: '// watch() - Observar cambios',
+        code: `watch(count, (newVal, oldVal) => {
+  console.log('Changed:', oldVal, '->', newVal);
+});`,
+        result: '// Logs on change'
+      },
+      {
+        name: 'onMounted()',
+        comment: '// onMounted() - Lifecycle hook',
+        code: `onMounted(() => {
+  console.log('Component mounted!');
+});`,
+        result: '// Runs after mount'
+      },
+      {
+        name: 'defineProps()',
+        comment: '// defineProps() - Props tipados',
+        code: `const props = defineProps<{
+  title: string;
+  count?: number;
+}>();`,
+        result: '// props.title, props.count'
+      },
+    ]
+  }
+}
+
+// Current selected method
+const selectedMethodIndex = ref(0)
+
+// Get current examples based on selected cheatcode
+const currentExamples = computed(() => {
+  const id = selectedCheatcode.value.id
+  return codeExamples[id]?.methods || codeExamples.javascript.methods
+})
+
+const currentExample = computed(() => currentExamples.value[selectedMethodIndex.value])
+
+// Select a cheatcode
+const selectCheatcode = (cheatcode: typeof includedCheatcodes[0]) => {
+  if (cheatcode.available === true) {
+    selectedCheatcode.value = cheatcode
+    selectedMethodIndex.value = 0
+  }
+}
+
+// Select a method
+const selectMethod = (index: number) => {
+  selectedMethodIndex.value = index
+}
 
 // FAQ
 const faqs = [
   {
     question: '¿Es esto una suscripcion?',
-    answer: '¡No! Es un pago unico por acceso de por vida. Pagas una vez y tienes acceso a todos los cheatcodes actuales y futuros para siempre.'
+    answer: '¡No! Es un pago unico por acceso de por vida. Puedes comprar un cheatcode individual por $5 o acceder a todo el catalogo por $100. Sin pagos recurrentes.'
+  },
+  {
+    question: '¿Cual es la diferencia entre los planes?',
+    answer: 'Con el plan Individual ($5) obtienes 1 cheatcode de tu eleccion. Con el plan Completo ($100) obtienes todos los cheatcodes actuales (8+) y todos los que agreguemos en el futuro.'
   },
   {
     question: '¿Que formatos estan disponibles?',
     answer: 'Todos los cheatcodes estan disponibles como paginas web hermosamente diseñadas con syntax highlighting, modo oscuro y busqueda instantanea. Accede desde cualquier dispositivo.'
   },
   {
-    question: '¿Recibo las actualizaciones futuras?',
-    answer: '¡Si! Todos los cheatcodes futuros y actualizaciones a los existentes estan incluidos en tu compra sin costo adicional.'
-  },
-]
-
-// Testimonials
-const testimonials = [
-  {
-    name: 'Maria Gonzalez',
-    role: 'Senior Developer · TechFlow',
-    content: 'Estos cheatcodes me han ahorrado incontables horas. La funcion de busqueda sola vale el precio.',
-    avatar: 'M'
+    question: '¿Recibo las actualizaciones?',
+    answer: '¡Si! Actualizamos los cheatcodes mensualmente. Todas las actualizaciones estan incluidas en tu compra sin costo adicional, tanto para el plan Individual como el Completo.'
   },
   {
-    name: 'Carlos Ruiz',
-    role: 'Freelance Developer',
-    content: 'Por fin, una referencia en la que realmente puedo confiar. Limpia, completa y siempre actualizada.',
-    avatar: 'C'
+    question: '¿Puedo comprar mas cheatcodes despues?',
+    answer: 'Claro. Si empiezas con el plan Individual, puedes comprar cheatcodes adicionales cuando quieras. Si decides pasar al plan Completo, contactanos y te damos un descuento por lo que ya pagaste.'
   },
-  {
-    name: 'Ana Torres',
-    role: 'Tech Lead · Shopify',
-    content: 'Compre esto para todo mi equipo. La mejor inversion en productividad de desarrolladores que hemos hecho.',
-    avatar: 'A'
-  }
 ]
 
 const openFaq = ref<number | null>(null)
 
-// Typing effect for hero
-const typedText = ref('')
-const fullText = 'codigo.'
-const typingComplete = ref(false)
+// Typing effect for hero with word rotation
+let typingTimeout: ReturnType<typeof setTimeout> | null = null
+
+const typeWord = () => {
+  const fullWord = rotatingWords[currentWordIndex.value]
+  let speed = 150
+
+  if (isDeleting.value) {
+    currentWord.value = fullWord.substring(0, currentWord.value.length - 1)
+    speed = 75
+  } else {
+    currentWord.value = fullWord.substring(0, currentWord.value.length + 1)
+    speed = 150
+  }
+
+  if (!isDeleting.value && currentWord.value === fullWord) {
+    // Pause at end of word
+    speed = 2000
+    isDeleting.value = true
+  } else if (isDeleting.value && currentWord.value === '') {
+    isDeleting.value = false
+    currentWordIndex.value = (currentWordIndex.value + 1) % rotatingWords.length
+    speed = 500
+  }
+
+  typingTimeout = setTimeout(typeWord, speed)
+}
 
 onMounted(() => {
-  // Typing effect
-  let i = 0
-  const typeInterval = setInterval(() => {
-    if (i < fullText.length) {
-      typedText.value += fullText.charAt(i)
-      i++
-    } else {
-      typingComplete.value = true
-      clearInterval(typeInterval)
-    }
-  }, 150)
+  typeWord()
+})
+
+onUnmounted(() => {
+  if (typingTimeout) clearTimeout(typingTimeout)
 })
 </script>
 
@@ -132,7 +246,7 @@ onMounted(() => {
         <div class="max-w-4xl mx-auto text-center">
           <h1 class="text-4xl sm:text-5xl lg:text-7xl font-bold leading-tight mb-6">
             Menos busquedas,<br />
-            <span class="text-brand">mas {{ typedText }}<span class="animate-pulse" :class="{ 'opacity-0': typingComplete }">|</span></span>
+            <span class="text-brand">mas {{ currentWord }}<span class="animate-pulse">|</span></span>
           </h1>
 
           <p class="text-lg sm:text-xl text-gray-400 max-w-2xl mx-auto mb-10">
@@ -141,12 +255,12 @@ onMounted(() => {
 
           <!-- CTA Buttons -->
           <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
-            <NuxtLink
-              to="/login"
+            <a
+              href="#pricing"
               class="btn-glow text-bg font-semibold px-8 py-4 rounded-lg text-lg inline-flex items-center gap-2"
             >
-              Obtener acceso — $29
-            </NuxtLink>
+              Ver planes desde $5
+            </a>
             <a
               href="#contenido"
               class="btn-outline font-semibold px-8 py-4 rounded-lg text-lg inline-flex items-center gap-2"
@@ -174,7 +288,7 @@ onMounted(() => {
       </UiContainer>
     </section>
 
-    <!-- Features Section -->
+    <!-- Features Section - Bento Grid -->
     <section id="caracteristicas" class="relative py-20 sm:py-32">
       <UiContainer>
         <div class="text-center mb-16">
@@ -186,21 +300,100 @@ onMounted(() => {
           </p>
         </div>
 
-        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Bento Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 auto-rows-[180px]">
+          <!-- Card 1: Acceso instantaneo - Large -->
           <div
-            v-for="feature in features"
-            :key="feature.title"
-            class="group card-glow p-6"
+            class="bento-glow group bg-linear-to-br from-brand/20 to-brand/5 border border-brand/20 p-6 md:col-span-2 md:row-span-2 flex flex-col justify-between hover:border-brand/40"
+            style="--glow-color: #00C9D4"
           >
-            <div class="text-4xl mb-4 group-hover:scale-110 transition-transform">
-              {{ feature.icon }}
+            <div>
+              <div class="w-14 h-14 rounded-xl bg-brand/20 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+                <span class="text-3xl">⚡</span>
+              </div>
+              <h3 class="text-2xl font-bold text-white mb-3">Acceso instantaneo</h3>
+              <p class="text-gray-400 text-base leading-relaxed">
+                Accede a todos los cheatcodes en el momento que compras. Sin esperas, sin suscripciones. Todo listo para usar desde el primer segundo.
+              </p>
             </div>
-            <h3 class="text-lg font-semibold text-white mb-2">
-              {{ feature.title }}
-            </h3>
-            <p class="text-gray-400 text-sm">
-              {{ feature.description }}
-            </p>
+            <div class="absolute -bottom-10 -right-10 w-40 h-40 bg-brand/10 rounded-full blur-3xl group-hover:bg-brand/20 transition-all pointer-events-none" />
+          </div>
+
+          <!-- Card 2: Updates gratis -->
+          <div
+            class="bento-glow group bg-linear-to-br from-accent/20 to-accent/5 border border-accent/20 p-6 flex flex-col justify-between hover:border-accent/40"
+            style="--glow-color: #A6FF3A"
+          >
+            <div>
+              <div class="w-12 h-12 rounded-xl bg-accent/20 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+                <span class="text-2xl">🔄</span>
+              </div>
+              <h3 class="text-lg font-bold text-white mb-2">Updates gratis</h3>
+              <p class="text-gray-400 text-sm">Todos los cheatcodes futuros incluidos.</p>
+            </div>
+          </div>
+
+          <!-- Card 3: Diseño profesional -->
+          <div
+            class="bento-glow group bg-linear-to-br from-purple-500/20 to-purple-500/5 border border-purple-500/20 p-6 flex flex-col justify-between hover:border-purple-500/40"
+            style="--glow-color: #A855F7"
+          >
+            <div>
+              <div class="w-12 h-12 rounded-xl bg-purple-500/20 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+                <span class="text-2xl">🎨</span>
+              </div>
+              <h3 class="text-lg font-bold text-white mb-2">Diseño profesional</h3>
+              <p class="text-gray-400 text-sm">Syntax highlighting y modo oscuro.</p>
+            </div>
+          </div>
+
+          <!-- Card 4: Busqueda instantanea - Wide -->
+          <div
+            class="bento-glow group bg-linear-to-br from-blue-500/20 to-blue-500/5 border border-blue-500/20 p-6 lg:col-span-2 flex flex-col justify-between hover:border-blue-500/40"
+            style="--glow-color: #3B82F6"
+          >
+            <div>
+              <div class="w-12 h-12 rounded-xl bg-blue-500/20 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+                <span class="text-2xl">🔍</span>
+              </div>
+              <h3 class="text-lg font-bold text-white mb-2">Busqueda instantanea</h3>
+              <p class="text-gray-400 text-sm">Encuentra cualquier snippet en segundos con nuestra busqueda global potente.</p>
+            </div>
+            <div class="absolute -bottom-6 -right-6 w-24 h-24 bg-blue-500/10 rounded-full blur-2xl group-hover:bg-blue-500/20 transition-all pointer-events-none" />
+          </div>
+
+          <!-- Card 5: Acceso de por vida -->
+          <div
+            class="bento-glow group bg-linear-to-br from-emerald-500/20 to-emerald-500/5 border border-emerald-500/20 p-6 flex flex-col justify-between hover:border-emerald-500/40"
+            style="--glow-color: #10B981"
+          >
+            <div>
+              <div class="w-12 h-12 rounded-xl bg-emerald-500/20 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+                <span class="text-2xl">🔒</span>
+              </div>
+              <h3 class="text-lg font-bold text-white mb-2">Acceso de por vida</h3>
+              <p class="text-gray-400 text-sm">Paga una vez, accede para siempre.</p>
+            </div>
+          </div>
+
+          <!-- Card 6: Instala como App (PWA) - Wide -->
+          <div
+            class="bento-glow group bg-linear-to-br from-orange-500/20 to-orange-500/5 border border-orange-500/20 p-6 lg:col-span-2 flex flex-col justify-between hover:border-orange-500/40"
+            style="--glow-color: #F97316"
+          >
+            <div class="flex items-start gap-4">
+              <div class="w-12 h-12 rounded-xl bg-orange-500/20 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+                <span class="text-2xl">📱</span>
+              </div>
+              <div>
+                <div class="flex items-center gap-2 mb-1">
+                  <h3 class="text-lg font-bold text-white">Instala como App</h3>
+                  <span class="text-xs bg-orange-500/20 text-orange-400 px-2 py-0.5 rounded-full">PWA</span>
+                </div>
+                <p class="text-gray-400 text-sm">Añade Cheatcodes a la pantalla de inicio de tu telefono y accede como una app nativa. Funciona offline para que consultes sin conexion.</p>
+              </div>
+            </div>
+            <div class="absolute -bottom-6 -right-6 w-24 h-24 bg-orange-500/10 rounded-full blur-2xl group-hover:bg-orange-500/20 transition-all pointer-events-none" />
           </div>
         </div>
       </UiContainer>
@@ -211,189 +404,189 @@ onMounted(() => {
       <UiContainer>
         <div class="text-center mb-16">
           <h2 class="text-3xl sm:text-4xl font-bold mb-4">
-            Casos <span class="text-brand">destacados</span>
+            Tu stack de <span class="text-brand">cheatcodes</span>
           </h2>
           <p class="text-lg text-gray-400 max-w-2xl mx-auto">
-            Cheatsheets completos cubriendo los conceptos mas importantes para desarrollo web moderno.
+            Referencias completas para las tecnologias mas usadas en desarrollo web moderno.
           </p>
         </div>
 
-        <!-- Included cheatcodes grid -->
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-16">
-          <div
-            v-for="cheatcode in includedCheatcodes"
-            :key="cheatcode.name"
-            class="bg-surface/50 border border-border rounded-xl p-4 flex items-center gap-3 hover:border-brand/30 transition-all"
-          >
-            <component :is="cheatcode.logo" size="32" />
+        <div class="grid lg:grid-cols-2 gap-8 items-start">
+          <!-- Left: Cheatcodes Stack -->
+          <div class="space-y-4">
+            <!-- Available Now -->
+            <div class="mb-6">
+              <div class="flex items-center gap-2 mb-4">
+                <div class="w-2 h-2 rounded-full bg-accent animate-pulse" />
+                <span class="text-sm font-medium text-accent uppercase tracking-wide">Disponibles ahora</span>
+              </div>
+              <div class="space-y-3">
+                <button
+                  v-for="cheatcode in includedCheatcodes.filter(c => c.available === true)"
+                  :key="cheatcode.id"
+                  @click="selectCheatcode(cheatcode)"
+                  class="group relative w-full text-left rounded-xl p-4 flex items-center gap-4 transition-all cursor-pointer"
+                  :class="selectedCheatcode.id === cheatcode.id
+                    ? 'bg-brand/10 border-2 border-brand'
+                    : 'bg-linear-to-br from-surface to-surface/50 border border-accent/30 hover:border-accent/60'"
+                >
+                  <div
+                    class="w-12 h-12 rounded-lg flex items-center justify-center transition-transform"
+                    :class="selectedCheatcode.id === cheatcode.id ? 'scale-110' : 'group-hover:scale-110'"
+                    :style="{ backgroundColor: cheatcode.color + '20' }"
+                  >
+                    <LogosCheatcodeLogo :id="cheatcode.logo" size="28" />
+                  </div>
+                  <div class="flex-1">
+                    <p class="font-semibold text-white">{{ cheatcode.name }}</p>
+                    <p class="text-sm text-gray-400">{{ cheatcode.section }}</p>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <span class="text-xs bg-accent/20 text-accent px-2 py-1 rounded-full font-medium">Incluido</span>
+                    <svg class="w-5 h-5 text-gray-500 group-hover:text-accent group-hover:translate-x-1 transition-all" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                    </svg>
+                  </div>
+                </button>
+              </div>
+            </div>
+
+            <!-- Coming Soon -->
             <div>
-              <p class="font-medium text-white text-sm">{{ cheatcode.name }}</p>
-              <p
-                class="text-xs"
-                :class="cheatcode.available === true ? 'text-accent' : 'text-gray-500'"
-              >
-                {{ cheatcode.available === true ? 'Disponible' : 'Proximamente' }}
+              <div class="flex items-center gap-2 mb-4">
+                <div class="w-2 h-2 rounded-full bg-gray-500" />
+                <span class="text-sm font-medium text-gray-500 uppercase tracking-wide">Proximamente</span>
+              </div>
+              <div class="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                <div
+                  v-for="cheatcode in includedCheatcodes.filter(c => c.available !== true)"
+                  :key="cheatcode.id"
+                  class="bg-surface/30 border border-border/50 rounded-xl p-3 flex items-center gap-3 opacity-60 hover:opacity-80 transition-opacity"
+                >
+                  <div class="w-8 h-8 rounded-lg bg-surface flex items-center justify-center">
+                    <LogosCheatcodeLogo :id="cheatcode.logo" size="20" />
+                  </div>
+                  <p class="text-sm text-gray-400 font-medium truncate">{{ cheatcode.name.split(' ')[0] }}</p>
+                </div>
+              </div>
+              <p class="text-xs text-gray-600 mt-3 text-center">
+                + mas tecnologias en camino. Tu compra incluye todos los futuros cheatcodes.
               </p>
             </div>
           </div>
-        </div>
 
-        <!-- Code preview mockup -->
-        <div class="relative rounded-2xl overflow-hidden border border-border shadow-2xl max-w-4xl mx-auto">
-          <div class="bg-surface px-4 py-3 border-b border-border flex items-center gap-3">
-            <div class="flex gap-2">
-              <div class="w-3 h-3 rounded-full bg-[#ff5f57]" />
-              <div class="w-3 h-3 rounded-full bg-[#febc2e]" />
-              <div class="w-3 h-3 rounded-full bg-[#28c840]" />
-            </div>
-            <div class="flex-1 text-center">
-              <span class="text-xs text-gray-500">cheatcodes.neskeep.com</span>
-            </div>
-          </div>
-          <div class="bg-bg p-6 sm:p-10">
-            <!-- Mock code block -->
-            <div class="bg-surface/50 rounded-xl p-6 font-mono text-sm overflow-x-auto border border-border">
-              <div class="text-gray-500 mb-4">// Array Methods Cheatsheet</div>
-              <div>
-                <span class="text-[#ff7b72]">const</span>
-                <span class="text-[#79c0ff]"> numbers</span>
-                <span class="text-gray-300"> = [</span>
-                <span class="text-[#a5d6ff]">1</span>
-                <span class="text-gray-300">, </span>
-                <span class="text-[#a5d6ff]">2</span>
-                <span class="text-gray-300">, </span>
-                <span class="text-[#a5d6ff]">3</span>
-                <span class="text-gray-300">, </span>
-                <span class="text-[#a5d6ff]">4</span>
-                <span class="text-gray-300">, </span>
-                <span class="text-[#a5d6ff]">5</span>
-                <span class="text-gray-300">];</span>
-              </div>
-              <div class="mt-2">
-                <span class="text-[#ff7b72]">const</span>
-                <span class="text-[#79c0ff]"> doubled</span>
-                <span class="text-gray-300"> = </span>
-                <span class="text-[#79c0ff]">numbers</span>
-                <span class="text-gray-300">.</span>
-                <span class="text-[#d2a8ff]">map</span>
-                <span class="text-gray-300">(</span>
-                <span class="text-[#79c0ff]">n</span>
-                <span class="text-[#ff7b72]"> =></span>
-                <span class="text-[#79c0ff]"> n</span>
-                <span class="text-gray-300"> * </span>
-                <span class="text-[#a5d6ff]">2</span>
-                <span class="text-gray-300">);</span>
-              </div>
-              <div class="mt-4 text-gray-600">// Result: [2, 4, 6, 8, 10]</div>
-            </div>
-          </div>
-        </div>
-      </UiContainer>
-    </section>
-
-    <!-- Testimonials -->
-    <section id="testimonios" class="relative py-20 sm:py-32">
-      <UiContainer>
-        <div class="text-center mb-16">
-          <h2 class="text-3xl sm:text-4xl font-bold mb-4">
-            Que dicen nuestros <span class="text-brand">clientes</span>
-          </h2>
-          <p class="text-lg text-gray-400 max-w-2xl mx-auto">
-            Desarrolladores que ya mejoraron su flujo de trabajo.
-          </p>
-        </div>
-
-        <div class="grid md:grid-cols-3 gap-6">
-          <div
-            v-for="testimonial in testimonials"
-            :key="testimonial.name"
-            class="card-glow p-6"
-          >
-            <div class="flex items-center gap-1 text-accent mb-4">
-              <svg v-for="i in 5" :key="i" class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-              </svg>
-            </div>
-            <p class="text-gray-300 mb-6 text-sm leading-relaxed">
-              "{{ testimonial.content }}"
-            </p>
-            <div class="flex items-center gap-3">
-              <div class="w-10 h-10 rounded-full bg-brand flex items-center justify-center text-bg font-bold text-sm">
-                {{ testimonial.avatar }}
-              </div>
-              <div>
-                <p class="font-medium text-white text-sm">{{ testimonial.name }}</p>
-                <p class="text-xs text-gray-500">{{ testimonial.role }}</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </UiContainer>
-    </section>
-
-    <!-- Pricing -->
-    <section class="relative py-20 sm:py-32 bg-surface/30">
-      <UiContainer max-width="5xl">
-        <div class="card-glow p-8 sm:p-12 text-center relative overflow-hidden">
-          <!-- Glow effect -->
-          <div class="absolute top-0 right-0 w-64 h-64 bg-brand rounded-full opacity-5 blur-[100px]" />
-          <div class="absolute bottom-0 left-0 w-48 h-48 bg-accent rounded-full opacity-5 blur-[80px]" />
-
+          <!-- Right: Code Preview -->
           <div class="relative">
-            <div class="inline-flex items-center gap-2 px-3 py-1 bg-accent/10 text-accent rounded-full text-sm font-medium mb-6">
-              <span>Oferta por tiempo limitado</span>
+            <!-- Floating badge -->
+            <div class="absolute -top-3 -right-3 z-10 bg-brand text-bg text-xs font-bold px-3 py-1.5 rounded-full shadow-lg">
+              Interactivo
             </div>
 
-            <h2 class="text-3xl sm:text-4xl font-bold mb-4">
-              Acceso de por vida
-            </h2>
+            <!-- Browser mockup -->
+            <div class="rounded-2xl overflow-hidden border border-border shadow-2xl bg-bg">
+              <!-- Browser header -->
+              <div class="bg-surface px-4 py-3 border-b border-border flex items-center gap-3">
+                <div class="flex gap-2">
+                  <div class="w-3 h-3 rounded-full bg-[#ff5f57]" />
+                  <div class="w-3 h-3 rounded-full bg-[#febc2e]" />
+                  <div class="w-3 h-3 rounded-full bg-[#28c840]" />
+                </div>
+                <div class="flex-1">
+                  <div class="bg-bg/50 rounded-lg px-3 py-1.5 text-xs text-gray-500 text-center max-w-xs mx-auto">
+                    cheatcodes.neskeep.com/{{ selectedCheatcode.url || selectedCheatcode.id }}
+                  </div>
+                </div>
+              </div>
 
-            <div class="mb-6">
-              <span class="text-5xl sm:text-6xl font-bold">$29</span>
-              <span class="text-gray-500 ml-2 line-through">$79</span>
+              <!-- Content -->
+              <div class="p-5">
+                <!-- Section header -->
+                <div class="flex items-center gap-3 mb-4">
+                  <LogosCheatcodeLogo :id="selectedCheatcode.logo" size="24" />
+                  <div>
+                    <h4 class="text-sm font-semibold text-white">{{ selectedCheatcode.section }}</h4>
+                    <p class="text-xs text-gray-500">{{ selectedCheatcode.name }}</p>
+                  </div>
+                </div>
+
+                <!-- Code block with transition -->
+                <div class="bg-surface/50 rounded-xl p-4 font-mono text-xs overflow-x-auto border border-border mb-4 min-h-[140px]">
+                  <div class="text-gray-500 mb-3">{{ currentExample.comment }}</div>
+                  <pre class="text-gray-300 whitespace-pre-wrap">{{ currentExample.code }}</pre>
+                  <div class="mt-2 text-accent">{{ currentExample.result }}</div>
+                </div>
+
+                <!-- Interactive method pills -->
+                <div class="flex flex-wrap gap-2">
+                  <button
+                    v-for="(method, index) in currentExamples"
+                    :key="method.name"
+                    @click="selectMethod(index)"
+                    class="text-xs px-3 py-1.5 rounded-md transition-all cursor-pointer hover:scale-105"
+                    :class="selectedMethodIndex === index
+                      ? 'bg-brand/20 text-brand font-medium ring-1 ring-brand/50'
+                      : 'bg-surface text-gray-400 hover:text-white hover:bg-surface/80'"
+                  >
+                    {{ method.name }}
+                  </button>
+                </div>
+              </div>
             </div>
 
-            <p class="text-gray-400 mb-8 max-w-md mx-auto">
-              Un pago. Acceso para siempre. Todos los cheatcodes actuales y futuros incluidos.
-            </p>
+            <!-- Decorative glow -->
+            <div
+              class="absolute -bottom-4 -left-4 w-32 h-32 rounded-full blur-3xl -z-10 transition-colors duration-500"
+              :style="{ backgroundColor: selectedCheatcode.color + '33' }"
+            />
+            <div class="absolute -top-4 -right-4 w-24 h-24 bg-accent/20 rounded-full blur-2xl -z-10" />
+          </div>
+        </div>
 
-            <ul class="text-left max-w-sm mx-auto space-y-3 mb-8">
-              <li class="flex items-center gap-3 text-gray-300 text-sm">
-                <svg class="w-5 h-5 text-accent flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-                </svg>
-                Todos los cheatcodes actuales (2+ y creciendo)
-              </li>
-              <li class="flex items-center gap-3 text-gray-300 text-sm">
-                <svg class="w-5 h-5 text-accent flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-                </svg>
-                Todas las actualizaciones y adiciones futuras
-              </li>
-              <li class="flex items-center gap-3 text-gray-300 text-sm">
-                <svg class="w-5 h-5 text-accent flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-                </svg>
-                Busqueda instantanea en todo el contenido
-              </li>
-              <li class="flex items-center gap-3 text-gray-300 text-sm">
-                <svg class="w-5 h-5 text-accent flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                  <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" />
-                </svg>
-                Modo oscuro y diseño responsivo
-              </li>
-            </ul>
+        <!-- Pricing Preview -->
+        <div class="mt-16 relative">
+          <div class="card-glow p-6 sm:p-8 relative overflow-hidden">
+            <!-- Animated border glow -->
+            <div class="absolute inset-0 bg-linear-to-r from-brand via-accent to-brand opacity-20 blur-xl" />
 
-            <NuxtLink
-              to="/login"
-              class="btn-glow text-bg font-semibold px-8 py-4 rounded-lg text-lg inline-block w-full sm:w-auto"
-            >
-              Obtener acceso de por vida
-            </NuxtLink>
+            <div class="relative flex flex-col lg:flex-row items-center justify-between gap-6">
+              <!-- Left: Offer info -->
+              <div class="flex-1 text-center lg:text-left">
+                <div class="inline-flex items-center gap-2 bg-accent/20 text-accent text-xs font-bold px-3 py-1.5 rounded-full mb-4">
+                  <span class="w-2 h-2 bg-accent rounded-full animate-pulse" />
+                  Pago unico · Acceso de por vida
+                </div>
+                <h3 class="text-2xl sm:text-3xl font-bold text-white mb-2">
+                  Desde <span class="text-brand">$5</span> por cheatcode
+                </h3>
+                <p class="text-gray-400">
+                  Compra individual o accede a todo el catalogo con actualizaciones mensuales incluidas.
+                </p>
+              </div>
 
-            <p class="mt-4 text-sm text-gray-500">
-              Garantia de satisfaccion de 30 dias. Sin preguntas.
-            </p>
+              <!-- Right: CTA -->
+              <div class="flex flex-col items-center lg:items-end gap-3">
+                <a
+                  href="#pricing"
+                  class="btn-glow text-bg font-semibold px-8 py-4 rounded-lg text-lg whitespace-nowrap"
+                >
+                  Ver planes
+                </a>
+                <div class="flex items-center gap-4 text-sm text-gray-500">
+                  <span class="flex items-center gap-1">
+                    <svg class="w-4 h-4 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                    </svg>
+                    Pago unico
+                  </span>
+                  <span class="flex items-center gap-1">
+                    <svg class="w-4 h-4 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                    </svg>
+                    Updates mensuales
+                  </span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </UiContainer>
@@ -441,29 +634,200 @@ onMounted(() => {
       </UiContainer>
     </section>
 
-    <!-- Contact/CTA Section -->
-    <section class="relative py-20 sm:py-32 bg-surface/30">
-      <UiContainer>
-        <div class="text-center">
-          <h2 class="text-3xl sm:text-4xl font-bold mb-6">
-            ¿Listo para <span class="text-brand">transformar</span> tu workflow?
+    <!-- Pricing Section -->
+    <section id="pricing" class="relative py-20 sm:py-32 bg-surface/30">
+      <UiContainer max-width="5xl">
+        <div class="text-center mb-12">
+          <h2 class="text-3xl sm:text-4xl font-bold mb-4">
+            Elige tu <span class="text-brand">plan</span>
           </h2>
-          <p class="text-lg text-gray-400 mb-8">
-            Unete a los desarrolladores que ya mejoraron su productividad.
-          </p>
-          <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <NuxtLink
-              to="/login"
-              class="btn-glow text-bg font-semibold px-8 py-4 rounded-lg text-lg"
-            >
-              Obtener acceso — $29
-            </NuxtLink>
-          </div>
-          <p class="mt-8 text-sm text-gray-500">
-            O escribenos directamente a
-            <a href="mailto:hello@neskeep.com" class="text-brand hover:underline">hello@neskeep.com</a>
+          <p class="text-lg text-gray-400">
+            Pago unico. Acceso de por vida. Actualizaciones mensuales incluidas.
           </p>
         </div>
+
+        <!-- Pricing Cards Grid -->
+        <div class="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+          <!-- Plan Individual -->
+          <div class="card-glow p-8 relative overflow-hidden">
+            <div class="mb-6">
+              <h3 class="text-xl font-bold text-white mb-2">Individual</h3>
+              <p class="text-gray-400 text-sm">Perfecto para empezar con un lenguaje especifico</p>
+            </div>
+
+            <!-- Price -->
+            <div class="mb-6">
+              <div class="flex items-baseline gap-1">
+                <span class="text-4xl font-bold text-white">$5</span>
+                <span class="text-gray-400">/ cheatcode</span>
+              </div>
+              <p class="text-sm text-gray-500 mt-1">Pago unico · Acceso de por vida</p>
+            </div>
+
+            <!-- Features list -->
+            <div class="space-y-3 mb-8">
+              <div class="flex items-center gap-3">
+                <div class="w-5 h-5 rounded-full bg-brand/20 flex items-center justify-center shrink-0">
+                  <svg class="w-3 h-3 text-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
+                  </svg>
+                </div>
+                <span class="text-gray-300 text-sm">1 cheatcode a tu eleccion</span>
+              </div>
+              <div class="flex items-center gap-3">
+                <div class="w-5 h-5 rounded-full bg-brand/20 flex items-center justify-center shrink-0">
+                  <svg class="w-3 h-3 text-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
+                  </svg>
+                </div>
+                <span class="text-gray-300 text-sm">Actualizaciones mensuales incluidas</span>
+              </div>
+              <div class="flex items-center gap-3">
+                <div class="w-5 h-5 rounded-full bg-brand/20 flex items-center justify-center shrink-0">
+                  <svg class="w-3 h-3 text-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
+                  </svg>
+                </div>
+                <span class="text-gray-300 text-sm">Busqueda instantanea</span>
+              </div>
+              <div class="flex items-center gap-3">
+                <div class="w-5 h-5 rounded-full bg-brand/20 flex items-center justify-center shrink-0">
+                  <svg class="w-3 h-3 text-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
+                  </svg>
+                </div>
+                <span class="text-gray-300 text-sm">Acceso web y PWA</span>
+              </div>
+            </div>
+
+            <!-- CTA -->
+            <NuxtLink
+              to="/login"
+              class="block w-full text-center btn-outline font-semibold px-6 py-3 rounded-lg"
+            >
+              Elegir cheatcode
+            </NuxtLink>
+          </div>
+
+          <!-- Plan Completo -->
+          <div class="card-glow p-8 relative overflow-hidden ring-2 ring-accent">
+            <!-- Popular badge -->
+            <div class="absolute -top-px left-1/2 -translate-x-1/2">
+              <span class="bg-accent text-bg text-xs font-bold px-4 py-1.5 rounded-b-lg shadow-lg">
+                Mejor valor
+              </span>
+            </div>
+
+            <!-- Glow effects -->
+            <div class="absolute top-0 right-0 w-48 h-48 bg-accent/20 rounded-full blur-3xl -z-10" />
+            <div class="absolute bottom-0 left-0 w-32 h-32 bg-brand/20 rounded-full blur-2xl -z-10" />
+
+            <div class="mb-6 pt-4">
+              <h3 class="text-xl font-bold text-white mb-2">Acceso Completo</h3>
+              <p class="text-gray-400 text-sm">Todo el catalogo actual y futuro para siempre</p>
+            </div>
+
+            <!-- Price -->
+            <div class="mb-6">
+              <div class="flex items-baseline gap-2">
+                <span class="text-2xl text-gray-500 line-through">$200</span>
+                <span class="text-4xl font-bold text-white">$100</span>
+              </div>
+              <p class="text-sm text-gray-500 mt-1">Pago unico · Acceso de por vida</p>
+              <div class="inline-flex items-center gap-1 mt-2 bg-accent/20 text-accent text-xs font-medium px-2 py-1 rounded-full">
+                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
+                </svg>
+                Ahorra 50%
+              </div>
+            </div>
+
+            <!-- Features list -->
+            <div class="space-y-3 mb-8">
+              <div class="flex items-center gap-3">
+                <div class="w-5 h-5 rounded-full bg-accent/20 flex items-center justify-center shrink-0">
+                  <svg class="w-3 h-3 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
+                  </svg>
+                </div>
+                <span class="text-gray-300 text-sm"><strong class="text-white">Todos</strong> los cheatcodes actuales (8+)</span>
+              </div>
+              <div class="flex items-center gap-3">
+                <div class="w-5 h-5 rounded-full bg-accent/20 flex items-center justify-center shrink-0">
+                  <svg class="w-3 h-3 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
+                  </svg>
+                </div>
+                <span class="text-gray-300 text-sm"><strong class="text-white">Todos</strong> los cheatcodes futuros</span>
+              </div>
+              <div class="flex items-center gap-3">
+                <div class="w-5 h-5 rounded-full bg-accent/20 flex items-center justify-center shrink-0">
+                  <svg class="w-3 h-3 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
+                  </svg>
+                </div>
+                <span class="text-gray-300 text-sm">Actualizaciones mensuales de por vida</span>
+              </div>
+              <div class="flex items-center gap-3">
+                <div class="w-5 h-5 rounded-full bg-accent/20 flex items-center justify-center shrink-0">
+                  <svg class="w-3 h-3 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
+                  </svg>
+                </div>
+                <span class="text-gray-300 text-sm">Busqueda instantanea y syntax highlighting</span>
+              </div>
+              <div class="flex items-center gap-3">
+                <div class="w-5 h-5 rounded-full bg-accent/20 flex items-center justify-center shrink-0">
+                  <svg class="w-3 h-3 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7" />
+                  </svg>
+                </div>
+                <span class="text-gray-300 text-sm">Instala como app (PWA) y usa offline</span>
+              </div>
+            </div>
+
+            <!-- CTA -->
+            <NuxtLink
+              to="/login"
+              class="block w-full text-center btn-glow text-bg font-semibold px-6 py-3 rounded-lg"
+            >
+              Obtener acceso completo
+            </NuxtLink>
+          </div>
+        </div>
+
+        <!-- Trust badges -->
+        <div class="flex items-center justify-center gap-6 mt-10 text-xs text-gray-500">
+          <span class="flex items-center gap-1">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+            </svg>
+            Pago seguro
+          </span>
+          <span class="flex items-center gap-1">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+            </svg>
+            Stripe
+          </span>
+          <span class="flex items-center gap-1">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+            </svg>
+            Garantizado
+          </span>
+        </div>
+
+        <!-- Contact -->
+        <p class="mt-10 text-center text-sm text-gray-500">
+          ¿Tienes dudas?
+          <a href="https://wa.me/18092225466" target="_blank" rel="noopener" class="text-brand hover:underline inline-flex items-center gap-1">
+            <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+            </svg>
+            Escribenos por WhatsApp
+          </a>
+        </p>
       </UiContainer>
     </section>
 
