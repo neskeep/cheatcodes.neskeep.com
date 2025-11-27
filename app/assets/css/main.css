@@ -1,187 +1,373 @@
 @import "tailwindcss";
 
-/* ============================================
-   NESKEEP - Unified Design System
-   Based on neskeep.com reference
-   ============================================ */
-
-/* Base color definitions */
+/* Variables de color de Neskeep */
 :root {
-  /* Neskeep Brand Colors */
+  /* Colores primarios */
   --color-neocyan: #00C9D4;
   --color-quantum-blue: #0C0F1C;
   --color-pulse-green: #A6FF3A;
 
-  /* Semantic colors for dark theme (default) */
-  --color-surface: #151922;
-  --color-border: rgba(255, 255, 255, 0.1);
+  /* Light mode - colores derivados */
+  --color-bg-darker: #F8FAFC;
+  --color-surface: #FFFFFF;
+  --color-border: #E2E8F0;
+  --color-text-primary: #0F172A;
+  --color-text-secondary: #475569;
+  --color-text-muted: #94A3B8;
+  --color-bg-tertiary: #F1F5F9;
 }
 
-/* ============================================
-   Tailwind v4 @theme Configuration
-   Maps CSS variables to Tailwind utilities
-   ============================================ */
+/* Dark mode */
+.dark {
+  --color-bg-darker: #081018;
+  --color-surface: #1A1E2A;
+  --color-border: #1A1E2A;
+  --color-text-primary: #FFFFFF;
+  --color-text-secondary: #A8B2D1;
+  --color-text-muted: #6B7280;
+  --color-bg-tertiary: #252B3B;
+}
+
 @theme {
+  /* Colores mapeados para Tailwind */
   --color-brand: var(--color-neocyan);
-  --color-bg: var(--color-quantum-blue);
   --color-accent: var(--color-pulse-green);
+
+  /* Dynamic colors that respond to theme */
+  --color-bg: var(--color-bg-darker);
   --color-surface: var(--color-surface);
   --color-border: var(--color-border);
+  --color-bg-tertiary: var(--color-bg-tertiary);
+
+  /* Escala de grises personalizada */
+  --color-gray-50: #F9FAFB;
+  --color-gray-100: #F3F4F6;
+  --color-gray-200: #E5E7EB;
+  --color-gray-300: #D1D5DB;
+  --color-gray-400: #9CA3AF;
+  --color-gray-500: #6B7280;
+  --color-gray-600: #4B5563;
+  --color-gray-700: #374151;
+  --color-gray-800: #1F2937;
+  --color-gray-900: #111827;
+
+  /* Tipografía */
+  --font-family-sans: "Inter", system-ui, -apple-system, sans-serif;
+
+  /* Espaciado adicional */
+  --spacing-18: 4.5rem;
+  --spacing-22: 5.5rem;
+  --spacing-26: 6.5rem;
+
+  /* Anchos máximos */
+  --max-width-8xl: 88rem;
+  --max-width-9xl: 96rem;
+
+  /* Sombras personalizadas */
+  --shadow-glow-sm: 0 0 10px color-mix(in srgb, var(--color-neocyan), transparent 70%);
+  --shadow-glow-md: 0 0 20px color-mix(in srgb, var(--color-neocyan), transparent 60%);
+  --shadow-glow-lg: 0 0 30px color-mix(in srgb, var(--color-pulse-green), transparent 50%);
+
+  /* Animaciones personalizadas */
+  --animate-fade-in: fade-in 0.6s ease-out;
+  --animate-slide-up: slide-up 0.8s ease-out;
+  --animate-glow: glow 2s ease-in-out infinite;
 }
 
-/* ============================================
-   Base Styles
-   ============================================ */
-html {
-  scroll-behavior: smooth;
+/* Animaciones custom avanzadas */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
-body {
-  background-color: var(--color-quantum-blue);
-  color: #ffffff;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  min-height: 100vh;
-  /* Animated mesh gradient background */
-  background-image:
-    radial-gradient(ellipse 80% 50% at 20% -20%, rgba(0, 201, 212, 0.15), transparent),
-    radial-gradient(ellipse 60% 40% at 80% 120%, rgba(166, 255, 58, 0.08), transparent),
-    radial-gradient(ellipse 50% 30% at 50% 50%, rgba(0, 201, 212, 0.05), transparent);
-  background-attachment: fixed;
-  animation: meshRotate 30s ease-in-out infinite;
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-@keyframes meshRotate {
+@keyframes slide-down {
+  from {
+    opacity: 0;
+    transform: translateY(-30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes glow {
   0%, 100% {
-    background-position: 0% 0%, 100% 100%, 50% 50%;
+    filter: drop-shadow(0 0 10px color-mix(in srgb, var(--color-neocyan), transparent 70%));
   }
   50% {
-    background-position: 100% 50%, 0% 50%, 50% 100%;
+    filter: drop-shadow(0 0 20px color-mix(in srgb, var(--color-pulse-green), transparent 50%));
   }
 }
 
-/* ============================================
-   Custom Scrollbar - Neskeep Style
-   ============================================ */
-::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+@keyframes glow-pulse {
+  0%, 100% {
+    box-shadow: 0 0 20px color-mix(in srgb, var(--color-neocyan), transparent 80%),
+                0 0 40px color-mix(in srgb, var(--color-neocyan), transparent 90%);
+  }
+  50% {
+    box-shadow: 0 0 30px color-mix(in srgb, var(--color-pulse-green), transparent 70%),
+                0 0 60px color-mix(in srgb, var(--color-pulse-green), transparent 85%);
+  }
 }
 
-::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.02);
+@keyframes gradient-shift {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
 }
 
-::-webkit-scrollbar-thumb {
-  background: rgba(0, 201, 212, 0.3);
-  border-radius: 4px;
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
 }
 
-::-webkit-scrollbar-thumb:hover {
-  background: var(--color-neocyan);
+@keyframes rotate-gradient {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
-/* Firefox */
-* {
-  scrollbar-width: thin;
-  scrollbar-color: rgba(0, 201, 212, 0.3) rgba(255, 255, 255, 0.02);
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
 }
 
-/* ============================================
-   Focus States - Accessibility
-   ============================================ */
-*:focus-visible {
-  outline: 2px solid var(--color-neocyan);
-  outline-offset: 2px;
+@keyframes reveal {
+  from {
+    opacity: 0;
+    transform: translateY(50px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
-/* ============================================
-   Button Styles - Neskeep Unified
-   ============================================ */
-
-/* Primary button with glow effect */
-.btn-glow {
-  background: linear-gradient(135deg, var(--color-neocyan), #00a8b3);
+/* Estilos base con mesh gradient animado */
+body {
   position: relative;
+  background: var(--color-bg-darker);
+  color: var(--color-text-primary);
+  font-family: var(--font-family-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Light mode background */
+body::before {
+  content: '';
+  position: fixed;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(
+    circle at 20% 50%,
+    color-mix(in srgb, var(--color-neocyan), transparent 92%) 0%,
+    transparent 50%
+  ),
+  radial-gradient(
+    circle at 80% 80%,
+    color-mix(in srgb, var(--color-pulse-green), transparent 94%) 0%,
+    transparent 50%
+  ),
+  radial-gradient(
+    circle at 40% 20%,
+    color-mix(in srgb, var(--color-neocyan), transparent 95%) 0%,
+    transparent 50%
+  );
+  animation: rotate-gradient 20s linear infinite;
+  pointer-events: none;
+  z-index: -1;
+  opacity: 0.4;
+}
+
+/* Dark mode - more vibrant gradients */
+.dark body::before {
+  opacity: 1;
+  background: radial-gradient(
+    circle at 20% 50%,
+    color-mix(in srgb, var(--color-neocyan), transparent 95%) 0%,
+    transparent 50%
+  ),
+  radial-gradient(
+    circle at 80% 80%,
+    color-mix(in srgb, var(--color-pulse-green), transparent 96%) 0%,
+    transparent 50%
+  ),
+  radial-gradient(
+    circle at 40% 20%,
+    color-mix(in srgb, var(--color-neocyan), transparent 97%) 0%,
+    transparent 50%
+  );
+}
+
+/* Utilidades personalizadas */
+.text-gradient {
+  background: linear-gradient(90deg, var(--color-neocyan), var(--color-pulse-green));
+  background-size: 200% 200%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: gradient-shift 3s ease infinite;
+}
+
+.text-gradient-static {
+  background: linear-gradient(90deg, var(--color-neocyan), var(--color-pulse-green));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.btn-glow {
+  position: relative;
+  background: linear-gradient(135deg, var(--color-neocyan), color-mix(in srgb, var(--color-neocyan), #0099A8));
+  box-shadow: 0 0 15px color-mix(in srgb, var(--color-neocyan), transparent 60%);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   overflow: hidden;
-  transition: all 0.3s ease;
 }
 
 .btn-glow::before {
   content: '';
   position: absolute;
-  inset: -2px;
-  background: linear-gradient(135deg, var(--color-neocyan), var(--color-pulse-green));
-  border-radius: inherit;
-  opacity: 0;
-  z-index: -1;
-  transition: opacity 0.3s ease;
-  filter: blur(15px);
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    color-mix(in srgb, white, transparent 70%),
+    transparent
+  );
+  transition: left 0.5s;
 }
 
 .btn-glow:hover::before {
-  opacity: 0.6;
+  left: 100%;
 }
 
 .btn-glow:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 40px rgba(0, 201, 212, 0.4);
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 0 30px color-mix(in srgb, var(--color-neocyan), transparent 40%),
+              0 10px 25px color-mix(in srgb, var(--color-neocyan), transparent 60%);
 }
 
-/* Outline button style */
+.btn-glow:active {
+  transform: translateY(-1px) scale(0.98);
+}
+
 .btn-outline {
-  background: transparent;
+  position: relative;
   border: 2px solid var(--color-neocyan);
   color: var(--color-neocyan);
-  position: relative;
+  background: transparent;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   overflow: hidden;
-  transition: all 0.3s ease;
 }
 
 .btn-outline::before {
   content: '';
   position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg, var(--color-neocyan), #00a8b3);
-  opacity: 0;
-  transition: opacity 0.3s ease;
-  z-index: -1;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    color-mix(in srgb, var(--color-neocyan), transparent 70%),
+    transparent
+  );
+  transition: left 0.5s;
 }
 
 .btn-outline:hover::before {
-  opacity: 1;
+  left: 100%;
 }
 
 .btn-outline:hover {
+  background: var(--color-neocyan);
   color: var(--color-quantum-blue);
-  border-color: transparent;
-  transform: translateY(-2px);
-  box-shadow: 0 10px 40px rgba(0, 201, 212, 0.4);
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 0 30px color-mix(in srgb, var(--color-neocyan), transparent 40%),
+              0 10px 25px color-mix(in srgb, var(--color-neocyan), transparent 60%);
 }
 
-/* ============================================
-   Card Styles - Neskeep Unified
-   ============================================ */
+.btn-outline:active {
+  transform: translateY(-1px) scale(0.98);
+}
+
 .card-glow {
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: 16px;
+  --glow-color: var(--color-neocyan);
   position: relative;
-  overflow: hidden;
+  background: color-mix(in srgb, var(--color-surface), transparent 50%);
+  border: 1px solid var(--color-border);
+  border-radius: 1.5rem; /* 24px - rounded-3xl */
+  backdrop-filter: blur(10px);
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
 }
 
 .card-glow::before {
   content: '';
   position: absolute;
-  inset: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
   background: radial-gradient(
-    800px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
-    rgba(0, 201, 212, 0.1),
+    600px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+    color-mix(in srgb, var(--glow-color), transparent 85%),
     transparent 40%
   );
   opacity: 0;
-  transition: opacity 0.5s ease;
+  transition: opacity 0.3s;
   pointer-events: none;
+  border-radius: inherit;
 }
 
 .card-glow:hover::before {
@@ -189,46 +375,277 @@ body {
 }
 
 .card-glow:hover {
-  border-color: rgba(0, 201, 212, 0.3);
+  border-color: color-mix(in srgb, var(--glow-color), transparent 60%);
+  box-shadow: 0 0 30px color-mix(in srgb, var(--glow-color), transparent 85%),
+              0 10px 40px color-mix(in srgb, var(--color-bg-darker), transparent 50%);
   transform: translateY(-4px);
-  box-shadow:
-    0 20px 40px rgba(0, 0, 0, 0.3),
-    0 0 60px rgba(0, 201, 212, 0.1);
 }
 
-/* ============================================
-   Glow Effects
-   ============================================ */
-.shadow-glow-sm {
-  box-shadow: 0 0 20px rgba(0, 201, 212, 0.2);
+/* Bento card variant - preserves gradient background */
+.bento-glow {
+  --glow-color: var(--color-neocyan);
+  position: relative;
+  border-radius: 1rem; /* 16px - rounded-2xl */
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
 }
 
-.shadow-glow {
-  box-shadow: 0 0 30px rgba(0, 201, 212, 0.3);
+.bento-glow::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(
+    400px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+    color-mix(in srgb, var(--glow-color), transparent 80%),
+    transparent 40%
+  );
+  opacity: 0;
+  transition: opacity 0.3s;
+  pointer-events: none;
+  border-radius: inherit;
+  z-index: 1;
 }
 
-.shadow-glow-lg {
-  box-shadow: 0 0 50px rgba(0, 201, 212, 0.4);
+.bento-glow:hover::after {
+  opacity: 1;
 }
 
-/* Text glow */
-.text-glow {
-  text-shadow: 0 0 20px rgba(0, 201, 212, 0.5);
+.bento-glow:hover {
+  transform: translateY(-4px);
 }
 
-/* Gradient text */
-.gradient-text {
-  background: linear-gradient(135deg, var(--color-neocyan), var(--color-pulse-green));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+.bento-glow > * {
+  position: relative;
+  z-index: 2;
 }
 
-/* ============================================
-   Animations - Neskeep
-   ============================================ */
+/* Efecto shimmer para loading states */
+.shimmer {
+  background: linear-gradient(
+    90deg,
+    transparent,
+    color-mix(in srgb, var(--color-neocyan), transparent 90%),
+    transparent
+  );
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite;
+}
 
-/* Morph animation for decorative elements */
+/* Floating animation */
+.float {
+  animation: float 6s ease-in-out infinite;
+}
+
+/* Reveal animation on scroll */
+.reveal {
+  opacity: 0;
+  animation: reveal 0.8s ease-out forwards;
+}
+
+/* Glow pulse effect */
+.glow-pulse {
+  animation: glow-pulse 2s ease-in-out infinite;
+}
+
+/* Scroll suave */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+/* Focus visible para accesibilidad */
+*:focus-visible {
+  outline: 2px solid var(--color-neocyan);
+  outline-offset: 2px;
+}
+
+/* ========================================
+   CUSTOM SCROLLBAR
+   ======================================== */
+
+/* Scrollbar para navegadores Webkit (Chrome, Safari, Edge) */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: color-mix(in srgb, var(--color-surface), transparent 50%);
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(
+    180deg,
+    var(--color-neocyan),
+    color-mix(in srgb, var(--color-neocyan), var(--color-pulse-green) 30%)
+  );
+  border-radius: 5px;
+  border: 2px solid var(--color-quantum-blue);
+  transition: background 0.3s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(
+    180deg,
+    color-mix(in srgb, var(--color-neocyan), white 10%),
+    color-mix(in srgb, var(--color-pulse-green), white 10%)
+  );
+  box-shadow: 0 0 10px color-mix(in srgb, var(--color-neocyan), transparent 50%);
+}
+
+::-webkit-scrollbar-thumb:active {
+  background: var(--color-pulse-green);
+}
+
+/* Scrollbar para Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-neocyan) color-mix(in srgb, var(--color-surface), transparent 50%);
+}
+
+/* ========================================
+   PAGE TRANSITIONS
+   ======================================== */
+
+/* Slide fade transition */
+.page-enter-active,
+.page-leave-active {
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.page-enter-from {
+  opacity: 0;
+  transform: translateX(20px);
+}
+
+.page-leave-to {
+  opacity: 0;
+  transform: translateX(-20px);
+}
+
+/* Scale fade transition */
+.scale-enter-active,
+.scale-leave-active {
+  transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.scale-enter-from {
+  opacity: 0;
+  transform: scale(0.95);
+}
+
+.scale-leave-to {
+  opacity: 0;
+  transform: scale(1.05);
+}
+
+/* Slide up transition */
+.slide-up-enter-active,
+.slide-up-leave-active {
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.slide-up-enter-from {
+  opacity: 0;
+  transform: translateY(30px);
+}
+
+.slide-up-leave-to {
+  opacity: 0;
+  transform: translateY(-30px);
+}
+
+/* ========================================
+   SECTION TRANSITIONS WITH SMOOTH CURVES
+   ======================================== */
+
+.section-transition {
+  transition: all 0.8s cubic-bezier(0.645, 0.045, 0.355, 1.000);
+}
+
+.section-enter {
+  opacity: 0;
+  transform: translateY(40px) scale(0.98);
+}
+
+.section-enter-active {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+/* Perspective 3D effect */
+.perspective-1000 {
+  perspective: 1000px;
+}
+
+.transform-3d {
+  transform-style: preserve-3d;
+}
+
+.backface-hidden {
+  backface-visibility: hidden;
+}
+
+/* ========================================
+   SMOOTH SCROLL SNAP
+   ======================================== */
+
+.scroll-snap-section {
+  scroll-snap-type: y proximity;
+  scroll-behavior: smooth;
+}
+
+.scroll-snap-item {
+  scroll-snap-align: start;
+  scroll-snap-stop: normal;
+}
+
+/* ========================================
+   BENTO GRID ANIMATIONS
+   ======================================== */
+
+@keyframes bento-float {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  25% {
+    transform: translateY(-5px) rotate(1deg);
+  }
+  50% {
+    transform: translateY(0) rotate(0deg);
+  }
+  75% {
+    transform: translateY(5px) rotate(-1deg);
+  }
+}
+
+@keyframes bento-pulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(0, 201, 212, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 20px 10px rgba(0, 201, 212, 0);
+  }
+}
+
+.bento-animate {
+  animation: bento-float 6s ease-in-out infinite;
+}
+
+.bento-pulse {
+  animation: bento-pulse 2s ease-in-out infinite;
+}
+
+/* ========================================
+   ADVANCED ANIMATIONS
+   ======================================== */
+
+/* Morphing blob effect */
 @keyframes morph {
   0%, 100% {
     border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
@@ -237,189 +654,157 @@ body {
     border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%;
   }
   50% {
-    border-radius: 50% 60% 30% 60% / 30% 60% 70% 40%;
+    border-radius: 40% 60% 60% 40% / 60% 40% 50% 60%;
   }
   75% {
-    border-radius: 60% 40% 60% 30% / 70% 30% 50% 60%;
+    border-radius: 70% 30% 50% 50% / 30% 70% 40% 60%;
   }
 }
 
-/* Liquid flowing animation */
+/* Liquid gradient animation */
 @keyframes liquid {
   0%, 100% {
-    transform: translate(0, 0) rotate(0deg);
+    background-position: 0% 50%;
+    filter: hue-rotate(0deg);
   }
   25% {
-    transform: translate(10px, -10px) rotate(5deg);
+    background-position: 100% 50%;
   }
   50% {
-    transform: translate(-5px, 5px) rotate(-3deg);
+    background-position: 100% 50%;
+    filter: hue-rotate(45deg);
   }
   75% {
-    transform: translate(-10px, -5px) rotate(2deg);
+    background-position: 0% 50%;
   }
 }
 
-/* Shimmer effect */
-@keyframes shimmer {
+/* Magnetic pull effect */
+@keyframes magnetic-pull {
+  0%, 100% {
+    transform: scale(1) rotate(0deg);
+  }
+  50% {
+    transform: scale(1.05) rotate(2deg);
+  }
+}
+
+/* Shimmer wave effect */
+@keyframes shimmer-wave {
   0% {
-    background-position: -200% 0;
+    background-position: -1000px 0;
   }
   100% {
-    background-position: 200% 0;
+    background-position: 1000px 0;
   }
 }
 
-/* Glow pulse */
-@keyframes glow-pulse {
-  0%, 100% {
-    opacity: 0.4;
-    transform: scale(1);
+/* Text gradient shimmer */
+@keyframes text-shimmer {
+  0% {
+    background-position: 0% center;
   }
-  50% {
-    opacity: 0.8;
-    transform: scale(1.05);
+  100% {
+    background-position: 200% center;
   }
 }
 
-/* Float animation */
-@keyframes float {
-  0%, 100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-10px);
-  }
-}
-
-/* Fade in animation */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-/* Animation utilities */
-.animate-morph {
+/* Utility classes for advanced animations */
+.morph-blob {
   animation: morph 8s ease-in-out infinite;
 }
 
-.animate-liquid {
+.liquid-gradient {
+  background-size: 200% 200%;
   animation: liquid 10s ease-in-out infinite;
 }
 
-.animate-shimmer {
+.magnetic-hover:hover {
+  animation: magnetic-pull 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.shimmer-wave {
   background: linear-gradient(
     90deg,
-    transparent,
-    rgba(0, 201, 212, 0.1),
-    transparent
+    rgba(255, 255, 255, 0) 0%,
+    rgba(0, 201, 212, 0.3) 50%,
+    rgba(255, 255, 255, 0) 100%
   );
-  background-size: 200% 100%;
-  animation: shimmer 2s infinite;
+  background-size: 1000px 100%;
+  animation: shimmer-wave 3s infinite;
 }
 
-.animate-glow-pulse {
-  animation: glow-pulse 3s ease-in-out infinite;
+.text-shimmer {
+  background: linear-gradient(
+    90deg,
+    var(--color-neocyan),
+    var(--color-pulse-green),
+    var(--color-neocyan)
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: text-shimmer 3s linear infinite;
 }
 
-.animate-float {
-  animation: float 6s ease-in-out infinite;
+/* ========================================
+   NESKEEP CARD
+   ======================================== */
+
+.neskeep-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 1rem;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* ============================================
-   Code Block Styles
-   ============================================ */
-.code-block-wrapper {
-  position: relative;
+.neskeep-card:hover {
+  border-color: color-mix(in srgb, var(--color-neocyan), transparent 50%);
+  box-shadow: 0 0 20px color-mix(in srgb, var(--color-neocyan), transparent 85%),
+              0 10px 30px color-mix(in srgb, var(--color-bg-darker), transparent 50%);
+  transform: translateY(-2px);
 }
 
-.copy-button {
-  position: absolute;
-  top: 0.5rem;
-  right: 0.5rem;
-  padding: 0.375rem 0.625rem;
-  font-size: 0.75rem;
-  background: rgba(0, 201, 212, 0.1);
-  border: 1px solid rgba(0, 201, 212, 0.3);
-  border-radius: 0.375rem;
-  color: var(--color-neocyan);
-  cursor: pointer;
-  transition: all 0.2s ease;
-  opacity: 0;
-  z-index: 10;
-}
+/* ========================================
+   BUTTONS
+   ======================================== */
 
-.code-block-wrapper:hover .copy-button {
-  opacity: 1;
-}
-
-.copy-button:hover {
-  background: rgba(0, 201, 212, 0.2);
-  border-color: var(--color-neocyan);
-  box-shadow: 0 0 10px rgba(0, 201, 212, 0.3);
-}
-
-.copy-button.copied {
-  background: var(--color-pulse-green);
-  border-color: var(--color-pulse-green);
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.625rem 1.25rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  border-radius: 0.5rem;
+  background: linear-gradient(135deg, var(--color-neocyan), color-mix(in srgb, var(--color-neocyan), #0099A8));
   color: var(--color-quantum-blue);
+  box-shadow: 0 0 15px color-mix(in srgb, var(--color-neocyan), transparent 60%);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* ============================================
-   Keyboard Shortcut Badge
-   ============================================ */
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 25px color-mix(in srgb, var(--color-neocyan), transparent 40%);
+}
+
+/* ========================================
+   KEYBOARD SHORTCUTS
+   ======================================== */
+
 .kbd {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   padding: 0.125rem 0.375rem;
+  font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
   font-size: 0.75rem;
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-  background: var(--color-surface);
+  font-weight: 500;
+  line-height: 1;
+  color: var(--color-text-muted);
+  background: var(--color-bg-tertiary);
   border: 1px solid var(--color-border);
   border-radius: 0.25rem;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-  color: rgba(255, 255, 255, 0.7);
-}
-
-/* ============================================
-   Input Styles
-   ============================================ */
-.input-neskeep {
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: 0.5rem;
-  padding: 0.75rem 1rem;
-  color: white;
-  transition: all 0.2s ease;
-}
-
-.input-neskeep:focus {
-  outline: none;
-  border-color: var(--color-neocyan);
-  box-shadow: 0 0 0 3px rgba(0, 201, 212, 0.1);
-}
-
-.input-neskeep::placeholder {
-  color: rgba(255, 255, 255, 0.4);
-}
-
-/* ============================================
-   Print Styles
-   ============================================ */
-@media print {
-  * {
-    -webkit-print-color-adjust: exact;
-    print-color-adjust: exact;
-  }
-
-  .no-print {
-    display: none !important;
-  }
+  box-shadow: 0 1px 0 var(--color-border);
 }
