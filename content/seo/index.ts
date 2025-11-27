@@ -1,15 +1,18 @@
-import type { Cheatcode } from '~/types/cheatcode'
+import type { Cheatcode } from '../types'
 
 export const seoCheatcode: Cheatcode = {
   metadata: {
     id: 'seo',
     title: 'SEO (Posicionamiento Web)',
     language: 'HTML/Técnico',
+    category: 'markup',
+    tags: ['seo', 'html', 'performance', 'frontend'],
     version: '2024',
     description: 'Guía completa de SEO: meta tags, Schema.org, Core Web Vitals, sitemap, robots.txt y más',
     lastUpdated: '2024-11-25',
     logo: '/logos/seo.svg',
     color: '#4285F4',
+    difficulty: 'intermediate',
   },
   sections: [
     // ============================================

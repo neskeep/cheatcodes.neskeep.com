@@ -1,10 +1,17 @@
-import type { CheatcodeList } from '~/types/cheatcode'
+import type { CheatcodeList } from './types'
+
+// Import cheatcodes - using static imports for all
 import { javascriptCheatcode } from './javascript'
 import { vueCheatcode } from './vue'
 import { htmlCheatcode } from './html'
 import { cssCheatcode } from './css'
 import { accessibilityCheatcode } from './accessibility'
 import { seoCheatcode } from './seo'
+import { reactCheatcode } from './react'
+// TODO: Add nuxt, next, php once Nitro bundling issue is resolved
+// import { nuxtCheatcode } from './nuxt'
+// import { nextCheatcode } from './next'
+// import { phpCheatcode } from './php'
 
 // Export all cheatcodes
 export const cheatcodes: CheatcodeList = {
@@ -14,9 +21,9 @@ export const cheatcodes: CheatcodeList = {
   css: cssCheatcode,
   accessibility: accessibilityCheatcode,
   seo: seoCheatcode,
-  // TODO: Add more cheatcodes
+  react: reactCheatcode,
+  // TODO: Add these once Nitro bundling issue is resolved
   // nuxt: nuxtCheatcode,
-  // react: reactCheatcode,
   // next: nextCheatcode,
   // php: phpCheatcode,
 }

@@ -1,15 +1,18 @@
-import type { Cheatcode } from '~/types/cheatcode'
+import type { Cheatcode } from '../types'
 
 export const htmlCheatcode: Cheatcode = {
   metadata: {
     id: 'html',
     title: 'HTML5',
     language: 'HTML',
+    category: 'markup',
+    tags: ['html', 'frontend'],
     version: 'HTML5',
     description: 'Guía completa de HTML5: estructura, elementos semánticos, formularios, multimedia y más',
     lastUpdated: '2024-11-25',
     logo: '/logos/html.svg',
     color: '#E34F26',
+    difficulty: 'beginner',
   },
   sections: [
     // ============================================

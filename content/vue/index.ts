@@ -1,40 +1,61 @@
-import type { Cheatcode } from '~/types/cheatcode'
+import type { Cheatcode } from '../types'
 
 export const vueCheatcode: Cheatcode = {
   metadata: {
     id: 'vue',
-    title: 'Referencia Completa de Vue 3',
+    title: 'Vue 3',
     language: 'Vue',
+    category: 'framework',
+    tags: ['vue', 'javascript', 'framework', 'frontend'],
     version: '3.5+',
     description: 'Guía completa de Vue 3 cubriendo Composition API, Reactividad, Componentes, Directivas, Enrutamiento, Gestión de Estado y más',
     lastUpdated: '2025-11-21',
     logo: '/logos/vue.svg',
     color: '#42b883',
+    difficulty: 'intermediate',
   },
   sections: [
     // ============ INSTALACIÓN Y CONFIGURACIÓN ============
     {
       id: 'installation',
       title: 'Instalación y Configuración del Proyecto',
-      type: 'code',
-      code: {
-        title: 'Crear un Nuevo Proyecto Vue 3',
-        code: `# Usando npm
-npm create vue@latest
-
-# Usando pnpm
-pnpm create vue@latest
-
-# Usando Vite directamente
-npm create vite@latest my-app -- --template vue
-
-# Instalar dependencias
-cd my-app
-npm install
-npm run dev`,
-        language: 'bash',
-        description: 'Los proyectos Vue 3 se crean comúnmente con create-vue (herramienta oficial de scaffolding) o Vite',
-      },
+      type: 'text',
+      content: 'Los proyectos Vue 3 se crean comúnmente con create-vue (herramienta oficial de scaffolding) o Vite.',
+      subsections: [
+        {
+          id: 'create-project',
+          title: 'Crear un Nuevo Proyecto Vue 3',
+          type: 'package-install',
+          packageCommands: {
+            npm: 'npm create vue@latest',
+            pnpm: 'pnpm create vue@latest',
+            yarn: 'yarn create vue@latest',
+            bun: 'bun create vue@latest',
+          },
+        },
+        {
+          id: 'install-deps',
+          title: 'Instalar Dependencias',
+          type: 'package-install',
+          packageCommands: {
+            npm: 'cd my-app && npm install && npm run dev',
+            pnpm: 'cd my-app && pnpm install && pnpm dev',
+            yarn: 'cd my-app && yarn && yarn dev',
+            bun: 'cd my-app && bun install && bun dev',
+          },
+        },
+        {
+          id: 'vite-alternative',
+          title: 'Alternativa con Vite Directo',
+          type: 'package-install',
+          packageCommands: {
+            npm: 'npm create vite@latest my-app -- --template vue',
+            pnpm: 'pnpm create vite@latest my-app --template vue',
+            yarn: 'yarn create vite my-app --template vue',
+            bun: 'bun create vite my-app --template vue',
+          },
+        },
+      ],
     },
 
     // ============ FUNDAMENTOS DE COMPONENTES ============

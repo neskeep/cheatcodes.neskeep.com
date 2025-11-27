@@ -1,15 +1,18 @@
-import type { Cheatcode } from '~/types/cheatcode'
+import type { Cheatcode } from '../types'
 
 export const javascriptCheatcode: Cheatcode = {
   metadata: {
     id: 'javascript',
     title: 'JavaScript',
     language: 'JavaScript',
-    version: 'ES2024',
-    description: 'Guía completa de JavaScript: variables, funciones, arrays, objetos, async/await, DOM y más',
-    lastUpdated: '2024-11-25',
+    category: 'language',
+    tags: ['javascript', 'frontend', 'backend'],
+    version: 'ES2025',
+    description: 'Guía completa de JavaScript: variables, funciones, arrays, objetos, async/await, DOM, ES2025 y más',
+    lastUpdated: '2025-11-26',
     logo: '/logos/javascript.svg',
     color: '#F7DF1E',
+    difficulty: 'intermediate',
   },
   sections: [
     // ============================================
@@ -1008,7 +1011,43 @@ const porEdad = Object.groupBy(personas, p => p.edad);
 // { 25: [{...}, {...}], 30: [{...}] }
 
 // Promise.withResolvers() (ES2024)
-const { promise, resolve, reject } = Promise.withResolvers();`,
+const { promise, resolve, reject } = Promise.withResolvers();
+
+// ============ ES2025 ============
+
+// Set methods (ES2025)
+const setA = new Set([1, 2, 3]);
+const setB = new Set([2, 3, 4]);
+
+setA.union(setB);              // Set {1, 2, 3, 4}
+setA.intersection(setB);       // Set {2, 3}
+setA.difference(setB);         // Set {1}
+setA.symmetricDifference(setB); // Set {1, 4}
+setA.isSubsetOf(setB);         // false
+setA.isSupersetOf(setB);       // false
+setA.isDisjointFrom(setB);     // false
+
+// Iterator helpers (ES2025)
+const iter = [1, 2, 3, 4, 5].values();
+iter.map(x => x * 2);          // Iterator de [2, 4, 6, 8, 10]
+iter.filter(x => x > 2);       // Iterator de [3, 4, 5]
+iter.take(3);                  // Iterator de [1, 2, 3]
+iter.drop(2);                  // Iterator de [3, 4, 5]
+iter.toArray();                // [1, 2, 3, 4, 5]
+iter.forEach(x => console.log(x));
+iter.some(x => x > 3);         // true
+iter.every(x => x > 0);        // true
+iter.find(x => x > 2);         // 3
+iter.reduce((a, b) => a + b, 0); // 15
+
+// RegExp.escape() (ES2025)
+const userInput = 'hello.*world';
+const escaped = RegExp.escape(userInput);
+// 'hello\\.\\*world' - seguro para usar en regex
+
+// Import attributes (ES2025)
+// import data from './data.json' with { type: 'json' };
+// import styles from './styles.css' with { type: 'css' };`,
       },
     },
 

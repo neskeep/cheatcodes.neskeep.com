@@ -1,15 +1,18 @@
-import type { Cheatcode } from '~/types/cheatcode'
+import type { Cheatcode } from '../types'
 
 export const cssCheatcode: Cheatcode = {
   metadata: {
     id: 'css',
     title: 'CSS3',
     language: 'CSS',
+    category: 'styling',
+    tags: ['css', 'frontend'],
     version: 'CSS3',
     description: 'Guía completa de CSS3: selectores, Flexbox, Grid, animaciones, variables y más',
     lastUpdated: '2024-11-25',
     logo: '/logos/css.svg',
     color: '#1572B6',
+    difficulty: 'beginner',
   },
   sections: [
     // ============================================

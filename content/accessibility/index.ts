@@ -1,15 +1,18 @@
-import type { Cheatcode } from '~/types/cheatcode'
+import type { Cheatcode } from '../types'
 
 export const accessibilityCheatcode: Cheatcode = {
   metadata: {
     id: 'accessibility',
     title: 'Accesibilidad Web (a11y)',
     language: 'HTML/ARIA',
+    category: 'markup',
+    tags: ['accessibility', 'html', 'frontend'],
     version: 'WCAG 2.2',
     description: 'Guía completa de accesibilidad web: ARIA, WCAG, lectores de pantalla, navegación por teclado y más',
     lastUpdated: '2024-11-25',
     logo: '/logos/accessibility.svg',
     color: '#0066CC',
+    difficulty: 'intermediate',
   },
   sections: [
     // ============================================
