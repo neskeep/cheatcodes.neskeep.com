@@ -1,6 +1,6 @@
-import { getCheatcode } from '#content'
+import { getCheatcode } from '../../utils/content'
 
-export default defineEventHandler((event) => {
+export default defineEventHandler(async (event) => {
   const id = getRouterParam(event, 'id')
 
   if (!id) {
@@ -10,7 +10,7 @@ export default defineEventHandler((event) => {
     })
   }
 
-  const cheatcode = getCheatcode(id)
+  const cheatcode = await getCheatcode(id)
 
   if (!cheatcode) {
     throw createError({

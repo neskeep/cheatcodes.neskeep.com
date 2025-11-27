@@ -1,7 +1,7 @@
-import { getAllCheatcodes } from '#content'
+import { getAllCheatcodes } from '../../utils/content'
 
-export default defineEventHandler(() => {
+export default defineEventHandler(async () => {
   // Return only metadata for all cheatcodes
-  const cheatcodes = getAllCheatcodes()
+  const cheatcodes = await getAllCheatcodes()
   return cheatcodes.map(c => c.metadata)
 })
