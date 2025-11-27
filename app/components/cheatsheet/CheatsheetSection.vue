@@ -11,21 +11,38 @@ const sectionAnchor = computed(() => `section-${props.section.id}`)
 </script>
 
 <template>
-  <div :id="isRoot ? sectionAnchor : undefined" class="cheatsheet-section mb-6 scroll-mt-20">
-    <h2 class="text-xl font-bold text-(--color-text-primary) mb-3 border-b-2 border-(--color-accent) pb-2 flex items-center gap-2">
-      <span class="w-1 h-6 bg-(--color-accent) rounded-full"></span>
-      {{ section.title }}
+  <section :id="isRoot ? sectionAnchor : undefined" class="scroll-mt-24">
+    <!-- Section header -->
+    <h2
+      v-if="isRoot"
+      class="text-xl font-semibold text-white mb-4 flex items-center gap-3 group"
+    >
+      <span class="w-1 h-6 bg-brand rounded-full"></span>
+      <span>{{ section.title }}</span>
+      <a
+        :href="`#${sectionAnchor}`"
+        class="opacity-0 group-hover:opacity-100 text-gray-500 hover:text-brand transition-opacity"
+        aria-label="Link to section"
+      >
+        #
+      </a>
     </h2>
+    <h3
+      v-else
+      class="text-lg font-medium text-gray-200 mb-3"
+    >
+      {{ section.title }}
+    </h3>
 
     <!-- Text content -->
-    <div v-if="section.type === 'text' && section.content" class="text-(--color-text-secondary) leading-relaxed">
+    <p v-if="section.type === 'text' && section.content" class="text-gray-400 leading-relaxed">
       {{ section.content }}
-    </div>
+    </p>
 
     <!-- List content -->
-    <ul v-if="section.type === 'list' && section.items" class="space-y-2 text-(--color-text-secondary) ml-2">
-      <li v-for="(item, index) in section.items" :key="index" class="flex items-start gap-2">
-        <span class="w-1.5 h-1.5 mt-2 bg-(--color-accent) rounded-full shrink-0"></span>
+    <ul v-if="section.type === 'list' && section.items" class="space-y-2 ml-1">
+      <li v-for="(item, index) in section.items" :key="index" class="flex items-start gap-3 text-gray-400">
+        <span class="w-1.5 h-1.5 mt-2.5 bg-brand rounded-full shrink-0"></span>
         <span class="leading-relaxed">{{ item }}</span>
       </li>
     </ul>
@@ -33,16 +50,22 @@ const sectionAnchor = computed(() => `section-${props.section.id}`)
     <!-- Code block -->
     <CheatsheetCodeBlock v-if="section.type === 'code' && section.code" :code="section.code" />
 
+    <!-- Package install tabs -->
+    <CheatsheetPackageManagerTabs
+      v-if="section.type === 'package-install' && section.packageCommands"
+      :commands="section.packageCommands"
+    />
+
     <!-- Table -->
     <CheatsheetTable v-if="section.type === 'table' && section.table" :table="section.table" />
 
     <!-- Subsections -->
-    <div v-if="section.subsections" class="ml-4 mt-4 space-y-4 pl-4 border-l-2 border-(--color-border)">
+    <div v-if="section.subsections" class="mt-6 space-y-6 pl-4 border-l border-border/50">
       <CheatsheetSection
         v-for="subsection in section.subsections"
         :key="subsection.id"
         :section="subsection"
       />
     </div>
-  </div>
+  </section>
 </template>
