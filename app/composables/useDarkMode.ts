@@ -1,5 +1,6 @@
 export const useDarkMode = () => {
-  const isDark = useState('darkMode', () => false)
+  // Default to dark mode (brand design is dark-first)
+  const isDark = useState('darkMode', () => true)
 
   const toggle = () => {
     isDark.value = !isDark.value
@@ -25,10 +26,18 @@ export const useDarkMode = () => {
       if (saved) {
         isDark.value = saved === 'dark'
       } else {
-        // Check system preference
-        isDark.value = window.matchMedia('(prefers-color-scheme: dark)').matches
+        // Default to dark mode for brand consistency, or use system preference
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
+        isDark.value = prefersDark || true // Default to dark if no preference
       }
       updateDOM()
+    }
+  }
+
+  // Initialize on first call (client-side only)
+  const init = () => {
+    if (import.meta.client) {
+      loadPreference()
     }
   }
 
@@ -36,5 +45,6 @@ export const useDarkMode = () => {
     isDark,
     toggle,
     loadPreference,
+    init,
   }
 }
