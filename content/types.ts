@@ -1,7 +1,8 @@
-// Categorías principales para agrupar
+// Shared types for content files - duplicated from app/types/cheatcode.ts
+// to avoid bundling issues with aliases in server context
+
 export type CheatcodeCategory = 'language' | 'framework' | 'markup' | 'styling' | 'tooling'
 
-// Tags para filtrado múltiple
 export type CheatcodeTag =
   | 'javascript'
   | 'typescript'
@@ -32,7 +33,7 @@ export interface CheatcodeMetadata {
   description: string
   lastUpdated: string
   icon?: string
-  logo?: string // URL or path to logo image
+  logo?: string
   color?: string
   difficulty?: 'beginner' | 'intermediate' | 'advanced'
 }
